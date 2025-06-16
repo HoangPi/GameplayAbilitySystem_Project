@@ -12,6 +12,7 @@
 #include "InputActionValue.h"
 
 #include "Components/Movement/ComponentMovement.h"
+#include "Components/Combat/Lockon/ComponentLockon.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -54,8 +55,11 @@ AGASP6Character::AGASP6Character()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
-	this->AbilitySystemComponent = this->CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("StillDontCare"));
-	this->CreateDefaultSubobject<UComponentMovement>(TEXT("dontcare"));
+
+	// TODO: Maby cache the components
+	this->AbilitySystemComponent = this->CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("dontcare"));
+	this->CreateDefaultSubobject<UComponentMovement>(TEXT("my_movement_component"));
+	this->CreateDefaultSubobject<UComponentLockon>(TEXT("my_lockon_component"));
 }
 
 //////////////////////////////////////////////////////////////////////////
