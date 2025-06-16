@@ -7,6 +7,7 @@
 
 #include "AbilitySystemComponent.h"
 #include "EnhancedInputComponent.h"
+#include "InputActionValue.h"
 
 #include "ComponentLockon.generated.h"
 
@@ -29,14 +30,15 @@ protected:
 	UAbilitySystemComponent *ownerASC;
 	UInputAction* LockonAction;
 	FGameplayAbilitySpecHandle lockonAbilityHandle;
-	UEnhancedInputComponent *ownerInput;
-	// FEnhancedInputActionEventBinding look;
+	FGameplayAbilitySpecHandle switchAbilityHandle;
+	UInputAction* LookAction;
 
 private:
 	void SetupMyInputs();
 	void LockOn();
 	void FindAndSetTarget();
 	void LockOff();
+	void switchTarget(const FInputActionValue &Value);
 
 public:	
 	// Called every frame

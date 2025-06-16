@@ -4,6 +4,7 @@
 
 #include "GASP6/GASP6Character.h"
 #include "Abilities/Combat/Lockon/AbilityLockon.h"
+#include "Abilities/Combat/Lockon/AbilityLockonSwitch.h"
 #include "Kismet/KismetMathLibrary.h"
 
 // Sets default values for this component's properties
@@ -21,7 +22,9 @@ UComponentLockon::UComponentLockon()
 		this->ownerASC = owner->GetAbilitySystemComponent();
 
 		this->LockonAction = LoadObject<UInputAction>(nullptr, TEXT("/Game/ThirdPerson/Input/Actions/IA_Lockon.IA_Lockon"));
+		this->LookAction = LoadObject<UInputAction>(nullptr, TEXT("/Game/ThirdPerson/Input/Actions/IA_Look.IA_Look"));
 		this->lockonAbilityHandle = this->ownerASC->K2_GiveAbility(UAbilityLockon::StaticClass());
+		this->switchAbilityHandle = this->ownerASC->K2_GiveAbility(UAbilityLockonSwitch::StaticClass());
 	}
 }
 
@@ -29,7 +32,7 @@ UComponentLockon::UComponentLockon()
 void UComponentLockon::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	// ...
 	if (this->LockonAction)
 	{
@@ -71,10 +74,11 @@ void UComponentLockon::SetupMyInputs()
 	AGASP6Character *owner = Cast<AGASP6Character>(this->GetOwner());
 	if (owner)
 	{
-		this->ownerInput = Cast<UEnhancedInputComponent>(owner->InputComponent);
-		if (this->ownerInput)
+		UEnhancedInputComponent *ownerInput = Cast<UEnhancedInputComponent>(owner->InputComponent);
+		if (ownerInput)
 		{
 			ownerInput->BindAction(this->LockonAction, ETriggerEvent::Started, this, &UComponentLockon::LockOn);
+			ownerInput->BindAction(this->LookAction, ETriggerEvent::Triggered, this, &UComponentLockon::switchTarget);
 		}
 	}
 }
@@ -87,6 +91,10 @@ void UComponentLockon::LockOn()
 		return;
 	}
 	this->FindAndSetTarget();
+	if (this->Target)
+	{
+		// this->lookBinding = ownerInput->BindAction(this->LookAction, ETriggerEvent::Started, this, &UComponentLockon::switchTarget).GetHandle();
+	}
 }
 
 void UComponentLockon::FindAndSetTarget()
@@ -96,4 +104,23 @@ void UComponentLockon::FindAndSetTarget()
 void UComponentLockon::LockOff()
 {
 	this->ownerASC->CancelAbilityHandle(this->lockonAbilityHandle);
+}
+void UComponentLockon::switchTarget(const FInputActionValue &Value)
+{
+	if(!this->Target)
+	{
+		return;
+	}
+	FVector2d input = Value.Get<FVector2d>();
+	// GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Purple, FString::Printf(TEXT("%f"), input.X));
+	if (input.X >= 5.0f)
+	{
+		this->ownerASC->TryActivateAbility(this->switchAbilityHandle);
+		return;
+	}
+	if (input.X <= -5.0f)
+	{
+		this->ownerASC->TryActivateAbility(this->switchAbilityHandle);
+		return;
+	}
 }
