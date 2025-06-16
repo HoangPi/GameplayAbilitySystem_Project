@@ -3,3 +3,15 @@
 
 #include "Effects/Lockon/EffectLockonCooldown.h"
 
+#include "Tags/Ability/Lockon/TagLockon.h"
+
+UEffectLockonCooldown::UEffectLockonCooldown()
+{
+    this->DurationPolicy = EGameplayEffectDurationType::HasDuration;
+    this->DurationMagnitude = FGameplayEffectModifierMagnitude(2.0f);
+    this->StackingType = EGameplayEffectStackingType::None;
+
+    UTargetTagsGameplayEffectComponent *comp = this->CreateDefaultSubobject<UTargetTagsGameplayEffectComponent>("GHGOVN");
+    ((FInheritedTagContainer &)comp->GetConfiguredTargetTagChanges()).AddTag(MyTags::Ability::Lockon::cooldown);
+    comp->SetAndApplyTargetTagChanges(comp->GetConfiguredTargetTagChanges());
+}

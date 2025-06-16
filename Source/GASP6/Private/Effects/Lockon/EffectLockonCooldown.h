@@ -4,6 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameplayEffect.h"
+
+#include "GameplayEffectComponents/TargetTagsGameplayEffectComponent.h"
+
 #include "EffectLockonCooldown.generated.h"
 
 /**
@@ -13,5 +16,7 @@ UCLASS()
 class UEffectLockonCooldown : public UGameplayEffect
 {
 	GENERATED_BODY()
-	
+
+public:
+	UEffectLockonCooldown();
 };
