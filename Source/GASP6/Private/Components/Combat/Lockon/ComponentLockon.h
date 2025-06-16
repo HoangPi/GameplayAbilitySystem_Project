@@ -28,6 +28,7 @@ protected:
 
 	UAbilitySystemComponent *ownerASC;
 	UInputAction* LockonAction;
+	FGameplayAbilitySpecHandle lockonAbilityHandle;
 
 private:
 	void SetupMyInputs();

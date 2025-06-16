@@ -3,6 +3,7 @@
 #include "Components/Combat/Lockon/ComponentLockon.h"
 
 #include "GASP6/GASP6Character.h"
+#include "Abilities/Combat/Lockon/AbilityLockon.h"
 
 // Sets default values for this component's properties
 UComponentLockon::UComponentLockon()
@@ -18,6 +19,7 @@ UComponentLockon::UComponentLockon()
 		this->ownerASC = owner->GetAbilitySystemComponent();
 
 		this->LockonAction = LoadObject<UInputAction>(nullptr, TEXT("/Game/ThirdPerson/Input/Actions/IA_Lockon.IA_Lockon"));
+		this->lockonAbilityHandle = this->ownerASC->K2_GiveAbility(UAbilityLockon::StaticClass());
 	}
 }
 
@@ -56,14 +58,19 @@ void UComponentLockon::SetupMyInputs()
 
 void UComponentLockon::LockOn()
 {
-	
+	if(this->Target)
+	{
+		this->LockOff();
+		return;
+	}
+	this->FindAndSetTarget();
 }
 
 void UComponentLockon::FindAndSetTarget()
 {
-
+	this->ownerASC->TryActivateAbility(this->lockonAbilityHandle);
 }
 void UComponentLockon::LockOff()
 {
-
+	this->ownerASC->CancelAbilityHandle(this->lockonAbilityHandle);
 }
