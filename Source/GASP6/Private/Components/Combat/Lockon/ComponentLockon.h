@@ -29,6 +29,8 @@ protected:
 	UAbilitySystemComponent *ownerASC;
 	UInputAction* LockonAction;
 	FGameplayAbilitySpecHandle lockonAbilityHandle;
+	UEnhancedInputComponent *ownerInput;
+	// FEnhancedInputActionEventBinding look;
 
 private:
 	void SetupMyInputs();
