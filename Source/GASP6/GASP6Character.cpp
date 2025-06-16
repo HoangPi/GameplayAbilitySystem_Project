@@ -59,7 +59,7 @@ AGASP6Character::AGASP6Character()
 	// TODO: Maby cache the components
 	this->AbilitySystemComponent = this->CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("dontcare"));
 	this->CreateDefaultSubobject<UComponentMovement>(TEXT("my_movement_component"));
-	this->CreateDefaultSubobject<UComponentLockon>(TEXT("my_lockon_component"));
+	this->myLockonComponent = this->CreateDefaultSubobject<UComponentLockon>(TEXT("my_lockon_component"));
 }
 
 //////////////////////////////////////////////////////////////////////////
