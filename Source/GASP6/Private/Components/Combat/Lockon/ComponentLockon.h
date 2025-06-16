@@ -4,6 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+
+#include "AbilitySystemComponent.h"
+#include "EnhancedInputComponent.h"
+
 #include "ComponentLockon.generated.h"
 
 
@@ -16,9 +20,20 @@ public:
 	// Sets default values for this component's properties
 	UComponentLockon();
 
+	AActor *Target;
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+
+	UAbilitySystemComponent *ownerASC;
+	UInputAction* LockonAction;
+
+private:
+	void SetupMyInputs();
+	void LockOn();
+	void FindAndSetTarget();
+	void LockOff();
 
 public:	
 	// Called every frame
