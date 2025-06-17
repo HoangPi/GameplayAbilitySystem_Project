@@ -8,7 +8,7 @@
 UEffectLockonCooldown::UEffectLockonCooldown()
 {
     this->DurationPolicy = EGameplayEffectDurationType::HasDuration;
-    this->DurationMagnitude = FGameplayEffectModifierMagnitude(2.0f);
+    this->DurationMagnitude = FGameplayEffectModifierMagnitude(1.0f);
     this->StackingType = EGameplayEffectStackingType::None;
 
     UTargetTagsGameplayEffectComponent *comp = this->CreateDefaultSubobject<UTargetTagsGameplayEffectComponent>("GHGOVN");
