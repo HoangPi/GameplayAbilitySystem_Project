@@ -23,7 +23,7 @@ void UAbilityLockon::ActivateAbility(
     AGASP6Character *owner = Cast<AGASP6Character>(ActorInfo->AvatarActor.Get());
     if(owner)
     {
-        this->actorsToIgnore.ClearIgnoredActors();
+        this->actorsToIgnore.ClearIgnoredSourceObjects();
         this->actorsToIgnore.AddIgnoredActor(owner);
         FHitResult result;
         FVector start = owner->GetFollowCamera()->GetComponentLocation();
