@@ -24,7 +24,6 @@ void UAbilityLockonSwitch::ActivateAbility(
 	AGASP6Character *owner = Cast<AGASP6Character>(ActorInfo->AvatarActor.Get());
 	if (owner)
 	{
-		this->ApplyCooldown(Handle, ActorInfo, ActivationInfo);
 		this->actorsToIgnore.ClearIgnoredSourceObjects();
 		this->actorsToIgnore.AddIgnoredActor(owner);
 		this->actorsToIgnore.AddIgnoredActor(owner->myLockonComponent->Target);
@@ -46,6 +45,7 @@ void UAbilityLockonSwitch::ActivateAbility(
 				this->collisionShape,
 				this->actorsToIgnore))
 		{
+			this->ApplyCooldown(Handle, ActorInfo, ActivationInfo);
 			AActor *target = results[0].GetActor();
 			FVector base = owner->myLockonComponent->Target->GetActorLocation();
 			double currentDistance = FVector::Distance(
@@ -53,13 +53,13 @@ void UAbilityLockonSwitch::ActivateAbility(
 				base);
 			double newDistance = 0;
 			// TODO: Update the limit if neccessary
-			// Only evaluate the first 4 hits 
+			// Only evaluate the first 4 hits
 			for (int i = 1; i < (results.Num() > 4 ? 4 : results.Num()); i++)
 			{
 				newDistance = FVector::Distance(
 					results[i].GetActor()->GetActorLocation(),
 					base);
-				if(newDistance < currentDistance)
+				if (newDistance < currentDistance)
 				{
 					currentDistance = newDistance;
 					target = results[i].GetActor();
