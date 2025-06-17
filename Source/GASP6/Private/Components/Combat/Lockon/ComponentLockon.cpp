@@ -115,11 +115,13 @@ void UComponentLockon::switchTarget(const FInputActionValue &Value)
 	// GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Purple, FString::Printf(TEXT("%f"), input.X));
 	if (input.X >= 5.0f)
 	{
+		this->SwitchLeft = false;
 		this->ownerASC->TryActivateAbility(this->switchAbilityHandle);
 		return;
 	}
 	if (input.X <= -5.0f)
 	{
+		this->SwitchLeft = true;
 		this->ownerASC->TryActivateAbility(this->switchAbilityHandle);
 		return;
 	}

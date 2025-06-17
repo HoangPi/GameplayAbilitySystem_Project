@@ -22,6 +22,7 @@ public:
 	UComponentLockon();
 
 	AActor *Target;
+	bool SwitchLeft;
 
 protected:
 	// Called when the game starts
