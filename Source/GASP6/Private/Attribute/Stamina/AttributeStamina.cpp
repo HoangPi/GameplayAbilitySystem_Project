@@ -33,31 +33,32 @@ void UAttributeStamina::PreAttributeChange(const FGameplayAttribute &Attribute, 
     }
 }
 
-void UAttributeStamina::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
+void UAttributeStamina::PostGameplayEffectExecute(const FGameplayEffectModCallbackData &Data)
 {
     Super::PostGameplayEffectExecute(Data);
     float current;
     float max;
-    if(Data.EvaluatedData.Attribute == UAttributeStamina::GetStaminaAttribute())
+    if (Data.EvaluatedData.Attribute == UAttributeStamina::GetStaminaAttribute())
     {
         current = this->Stamina.GetCurrentValue();
         max = this->MaxStamina.GetCurrentValue();
-        if(current <= 0)
+        if (current <= 0)
         {
             Data.Target.CancelAbilities(&this->abilitiesToCancel);
             Data.Target.AddLooseGameplayTag(MyTags::Attribute::Stamina::empty);
         }
-        else if(current >= max)
+        else if (current >= max)
         {
             Data.Target.RemoveLooseGameplayTag(MyTags::Attribute::Stamina::not_full);
             Data.Target.AddLooseGameplayTag(MyTags::Attribute::Stamina::full);
         }
-        else {
-            if(!Data.Target.HasMatchingGameplayTag(MyTags::Attribute::Stamina::not_full))
+        else
+        {
+            if (!Data.Target.HasMatchingGameplayTag(MyTags::Attribute::Stamina::not_full))
             {
                 Data.Target.AddLooseGameplayTag(MyTags::Attribute::Stamina::not_full);
+                Data.Target.RemoveLooseGameplayTag(MyTags::Attribute::Stamina::full);
             }
-            Data.Target.RemoveLooseGameplayTag(MyTags::Attribute::Stamina::full);
             Data.Target.RemoveLooseGameplayTag(MyTags::Attribute::Stamina::empty);
         }
     }
