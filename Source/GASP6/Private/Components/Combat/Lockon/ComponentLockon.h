@@ -21,6 +21,7 @@ public:
 	// Sets default values for this component's properties
 	UComponentLockon();
 
+	UPROPERTY(BlueprintReadonly)
 	AActor *Target;
 	bool SwitchLeft;
 
