@@ -5,6 +5,7 @@
 #include "GASP6/GASP6Character.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Components/Combat/Lockon/ComponentLockon.h"
+#include "Tags/Ability/Movement/TagMovement.h"
 
 UAbilityLockon::UAbilityLockon()
 {
@@ -44,7 +45,11 @@ void UAbilityLockon::ActivateAbility(
             GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, result.GetActor()->GetName());
             owner->myLockonComponent->Target = result.GetActor();
             owner->myLockonComponent->SetComponentTickEnabled(true);
-            owner->GetCharacterMovement()->bOrientRotationToMovement = false;
+            owner->GetCharacterMovement()->bOrientRotationToMovement = (
+                this->GetAbilitySystemComponentFromActorInfo()->HasMatchingGameplayTag(MyTags::Ability::Movement::sprint)
+                    ? true
+                    : false
+            );
         }
         // TArray<TEnumAsByte<EObjectTypeQuery>> ehm;
         // ehm.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_EngineTraceChannel1));
