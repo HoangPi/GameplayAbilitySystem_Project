@@ -8,5 +8,6 @@ namespace MyTags
     {
         UE_DEFINE_GAMEPLAY_TAG(requirement, "ability.requirement")
         UE_DEFINE_GAMEPLAY_TAG(lockon, "ability.lockon")
+        UE_DEFINE_GAMEPLAY_TAG(movement, "ability.movement")
     }
 }
