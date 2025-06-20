@@ -32,7 +32,7 @@ UComponentLockon::UComponentLockon()
 void UComponentLockon::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	// ...
 	if (this->LockonAction)
 	{
@@ -68,7 +68,10 @@ void UComponentLockon::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 		10.0f);
 	owner->GetController()->SetControlRotation(targetRot);
 	// TODO: maybe check the rotation angle to play anim
-	owner->SetActorRotation(FRotator(0, targetRot.Yaw, 0));
+	if (!owner->GetCharacterMovement()->bOrientRotationToMovement)
+	{
+		owner->SetActorRotation(FRotator(0, targetRot.Yaw, 0));
+	}
 }
 
 void UComponentLockon::SetupMyInputs()
@@ -109,7 +112,7 @@ void UComponentLockon::LockOff()
 }
 void UComponentLockon::switchTarget(const FInputActionValue &Value)
 {
-	if(!this->Target)
+	if (!this->Target)
 	{
 		return;
 	}
