@@ -67,6 +67,8 @@ void UComponentLockon::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 		DeltaTime,
 		10.0f);
 	owner->GetController()->SetControlRotation(targetRot);
+	// TODO: maybe check the rotation angle to play anim
+	owner->SetActorRotation(FRotator(0, targetRot.Yaw, 0));
 }
 
 void UComponentLockon::SetupMyInputs()
