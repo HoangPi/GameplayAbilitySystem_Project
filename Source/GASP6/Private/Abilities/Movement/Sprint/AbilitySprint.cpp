@@ -13,6 +13,7 @@ UAbilitySprint::UAbilitySprint()
     this->SetAssetTags(this->GetAssetTags());
 
     this->ActivationOwnedTags.AddTag(MyTags::PlayerState::combat);
+    this->ActivationOwnedTags.AddTag(MyTags::Ability::Movement::sprint);
     this->ActivationBlockedTags.AddTag(MyTags::Attribute::Stamina::empty);
 }
 
