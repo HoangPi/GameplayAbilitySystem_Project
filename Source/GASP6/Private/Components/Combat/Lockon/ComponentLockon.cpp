@@ -72,6 +72,15 @@ void UComponentLockon::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	{
 		owner->SetActorRotation(FRotator(0, targetRot.Yaw, 0));
 	}
+	GEngine->AddOnScreenDebugMessage(
+		-1,
+		0.0f,
+		FColor::Green,
+		FString::Printf(
+			TEXT("%fs remaining"), 
+			((UAbilityLockonSwitch *)UAbilityLockonSwitch::StaticClass()->GetDefaultObject())->GetCooldownTimeRemaining(ownerASC->AbilityActorInfo.Get())
+		)
+	);
 }
 
 void UComponentLockon::SetupMyInputs()
