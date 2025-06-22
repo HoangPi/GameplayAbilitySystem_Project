@@ -14,4 +14,6 @@ UEffectLockonCooldown::UEffectLockonCooldown()
     UTargetTagsGameplayEffectComponent *comp = this->CreateDefaultSubobject<UTargetTagsGameplayEffectComponent>("GHGOVN");
     ((FInheritedTagContainer &)comp->GetConfiguredTargetTagChanges()).AddTag(MyTags::Ability::Lockon::cooldown);
     comp->SetAndApplyTargetTagChanges(comp->GetConfiguredTargetTagChanges());
+
+    this->GEComponents.Add(comp);
 }

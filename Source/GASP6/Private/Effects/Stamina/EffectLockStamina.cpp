@@ -15,4 +15,6 @@ UEffectLockStamina::UEffectLockStamina()
     UTargetTagsGameplayEffectComponent *comp = this->CreateDefaultSubobject<UTargetTagsGameplayEffectComponent>(TEXT("hello_there"));
     ((FInheritedTagContainer &)comp->GetConfiguredTargetTagChanges()).AddTag(MyTags::Effect::Stamina::cooldown);
     comp->SetAndApplyTargetTagChanges(comp->GetConfiguredTargetTagChanges());
+
+    this->GEComponents.Add(comp);
 }
