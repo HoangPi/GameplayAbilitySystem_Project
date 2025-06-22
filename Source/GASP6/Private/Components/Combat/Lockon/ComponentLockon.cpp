@@ -72,6 +72,7 @@ void UComponentLockon::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	{
 		owner->SetActorRotation(FRotator(0, targetRot.Yaw, 0));
 	}
+#ifdef WITH_EDITOR
 	GEngine->AddOnScreenDebugMessage(
 		-1,
 		0.0f,
@@ -81,6 +82,7 @@ void UComponentLockon::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 			((UAbilityLockonSwitch *)UAbilityLockonSwitch::StaticClass()->GetDefaultObject())->GetCooldownTimeRemaining(ownerASC->AbilityActorInfo.Get())
 		)
 	);
+#endif
 }
 
 void UComponentLockon::SetupMyInputs()

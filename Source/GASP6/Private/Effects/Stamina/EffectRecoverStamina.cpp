@@ -25,4 +25,6 @@ UEffectRecoverStamina::UEffectRecoverStamina()
     comp->OngoingTagRequirements.RequireTags.AddTag(MyTags::Attribute::Stamina::not_full);
     comp->OngoingTagRequirements.IgnoreTags.AddTag(MyTags::Effect::Stamina::cooldown);
     comp->OngoingTagRequirements.IgnoreTags.AddTag(MyTags::PlayerState::combat);
+    
+    this->GEComponents.Add(comp);
 }

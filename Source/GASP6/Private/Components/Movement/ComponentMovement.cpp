@@ -70,6 +70,7 @@ void UComponentMovement::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+#ifdef WITH_EDITOR
 	GEngine->AddOnScreenDebugMessage(
 		-1,
 		0.0f,
@@ -84,6 +85,7 @@ void UComponentMovement::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("%f"), yo));
 		yo -= DeltaTime;
 	}
+#endif
 }
 
 void UComponentMovement::SetupMyInputs()
@@ -101,11 +103,15 @@ void UComponentMovement::SetupMyInputs()
 }
 void UComponentMovement::Sprint()
 {
+#ifdef WITH_EDITOR
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, FString("Yes"));
+#endif
 	this->ownerASC->TryActivateAbility(this->AbilitySprint);
 }
 void UComponentMovement::StopSprinting()
 {
+#ifdef WITH_EDITOR
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, FString("No"));
+#endif
 	this->ownerASC->CancelAbilityHandle(this->AbilitySprint);
 }
