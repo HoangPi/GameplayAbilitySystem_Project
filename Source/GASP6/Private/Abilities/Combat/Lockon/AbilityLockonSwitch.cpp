@@ -67,6 +67,7 @@ void UAbilityLockonSwitch::ActivateAbility(
 			}
 			owner->myLockonComponent->Target = target;
 		}
+#ifdef WITH_EDITOR
 		TArray<TEnumAsByte<EObjectTypeQuery>> ehm;
 		ehm.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_EngineTraceChannel1));
 		TArray<AActor *> yo;
@@ -88,6 +89,7 @@ void UAbilityLockonSwitch::ActivateAbility(
 			FLinearColor::Green,
 			2.0f);
 	}
+#endif
 }
 
 void UAbilityLockonSwitch::EndAbility(const FGameplayAbilitySpecHandle Handle,

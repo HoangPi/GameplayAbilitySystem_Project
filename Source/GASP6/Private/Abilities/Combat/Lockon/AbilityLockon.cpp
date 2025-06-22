@@ -42,14 +42,14 @@ void UAbilityLockon::ActivateAbility(
                 this->collisionShape,
                 this->actorsToIgnore))
         {
+#ifdef WITH_EDITOR
             GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, result.GetActor()->GetName());
+#endif
             owner->myLockonComponent->Target = result.GetActor();
             owner->myLockonComponent->SetComponentTickEnabled(true);
-            owner->GetCharacterMovement()->bOrientRotationToMovement = (
-                this->GetAbilitySystemComponentFromActorInfo()->HasMatchingGameplayTag(MyTags::Ability::Movement::sprint)
-                    ? true
-                    : false
-            );
+            owner->GetCharacterMovement()->bOrientRotationToMovement = (this->GetAbilitySystemComponentFromActorInfo()->HasMatchingGameplayTag(MyTags::Ability::Movement::sprint)
+                                                                            ? true
+                                                                            : false);
         }
         // TArray<TEnumAsByte<EObjectTypeQuery>> ehm;
         // ehm.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_EngineTraceChannel1));
