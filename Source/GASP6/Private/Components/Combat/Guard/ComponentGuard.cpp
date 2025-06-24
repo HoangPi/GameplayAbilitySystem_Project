@@ -3,6 +3,8 @@
 
 #include "Components/Combat/Guard/ComponentGuard.h"
 
+#include "GASP6/GASP6Character.h"
+
 // Sets default values for this component's properties
 UComponentGuard::UComponentGuard()
 {
@@ -11,6 +13,12 @@ UComponentGuard::UComponentGuard()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
+	AGASP6Character *owner = this->GetOwner<AGASP6Character>();
+	if(owner)
+	{
+		this->GuardAction = LoadObject<UInputAction>(nullptr, TEXT("/Game/ThirdPerson/Input/Actions/IA_Block.IA_Block"));
+		this->ownerASC = owner->GetAbilitySystemComponent();
+	}
 }
 
 
@@ -20,7 +28,7 @@ void UComponentGuard::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
+	this->SetupMyInputs();
 }
 
 
@@ -32,3 +40,29 @@ void UComponentGuard::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	// ...
 }
 
+void UComponentGuard::SetupMyInputs()
+{
+	AGASP6Character *owner = this->GetOwner<AGASP6Character>();
+	if(owner)
+	{
+		UEnhancedInputComponent *input = Cast<UEnhancedInputComponent>(owner->InputComponent);
+		if(input)
+		{
+			if(this->GuardAction)
+			{
+				input->BindAction(this->GuardAction, ETriggerEvent::Started, this, &UComponentGuard::Guard);
+				input->BindAction(this->GuardAction, ETriggerEvent::Completed, this, &UComponentGuard::ReleaseGuard);
+			}
+		}
+	}
+}
+
+void UComponentGuard::Guard()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Purple, FString("Guarding"));
+}
+
+void UComponentGuard::ReleaseGuard()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Purple, FString("Guarding ja nai desu"));
+}

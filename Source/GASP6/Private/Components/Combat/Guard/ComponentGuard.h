@@ -4,15 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+
+#include "EnhancedInputComponent.h"
+#include "AbilitySystemComponent.h"
+
 #include "ComponentGuard.generated.h"
 
-
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class UComponentGuard : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	// Sets default values for this component's properties
 	UComponentGuard();
 
@@ -20,9 +23,15 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	UInputAction *GuardAction;
+	UAbilitySystemComponent *ownerASC;
 
-		
+public:
+	// Called every frame
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
+
+private:
+	void SetupMyInputs();
+	void Guard();
+	void ReleaseGuard();
 };
