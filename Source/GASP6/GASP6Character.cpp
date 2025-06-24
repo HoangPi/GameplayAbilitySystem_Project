@@ -13,6 +13,7 @@
 
 #include "Components/Movement/ComponentMovement.h"
 #include "Components/Combat/Lockon/ComponentLockon.h"
+#include "Components/Combat/Guard/ComponentGuard.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -60,6 +61,7 @@ AGASP6Character::AGASP6Character()
 	this->AbilitySystemComponent = this->CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("dontcare"));
 	this->CreateDefaultSubobject<UComponentMovement>(TEXT("my_movement_component"));
 	this->myLockonComponent = this->CreateDefaultSubobject<UComponentLockon>(TEXT("my_lockon_component"));
+	this->CreateDefaultSubobject<UComponentGuard>(TEXT("My guard component"));
 }
 
 //////////////////////////////////////////////////////////////////////////
