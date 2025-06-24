@@ -15,6 +15,7 @@ public class GASP6 : ModuleRules
 			"InputCore",
 			"EnhancedInput",
 			"GameplayAbilities",
+			"GameplayTasks",
 			"GameplayTags",
 		});
 	}
