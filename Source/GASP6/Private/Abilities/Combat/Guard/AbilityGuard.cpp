@@ -30,18 +30,12 @@ void UAbilityGuard::ActivateAbility(
             this->GetAbilityLevel());
         return;
     }
-    asc->ApplyGameplayEffectSpecToSelf(
-        FGameplayEffectSpec(
-            (UEffectGuard *)UEffectGuard::StaticClass()->GetDefaultObject(),
-            this->MakeEffectContext(Handle, ActorInfo)
-        )
-    );
-    // this->ApplyGameplayEffectToOwner(
-    //     Handle,
-    //     ActorInfo,
-    //     ActivationInfo,
-    //     (UEffectGuard *)UEffectGuard::StaticClass()->GetDefaultObject(),
-    //     this->GetAbilityLevel());
+    this->ApplyGameplayEffectToOwner(
+        Handle,
+        ActorInfo,
+        ActivationInfo,
+        (UEffectGuard *)UEffectGuard::StaticClass()->GetDefaultObject(),
+        this->GetAbilityLevel());
 }
 
 void UAbilityGuard::EndAbility(
