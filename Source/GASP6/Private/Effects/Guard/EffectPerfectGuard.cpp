@@ -18,6 +18,7 @@ UEffectPerfectGuard::UEffectPerfectGuard()
 
     UTargetTagsGameplayEffectComponent *comp = this->CreateDefaultSubobject<UTargetTagsGameplayEffectComponent>(FName("Never care about this before"));
     ((FInheritedTagContainer &)comp->GetConfiguredTargetTagChanges()).AddTag(MyTags::PlayerState::perfect_guard);
+    ((FInheritedTagContainer &)comp->GetConfiguredTargetTagChanges()).AddTag(MyTags::PlayerState::combat);
     comp->SetAndApplyTargetTagChanges(comp->GetConfiguredTargetTagChanges());
 
     UTargetTagRequirementsGameplayEffectComponent *comp2 = this->CreateDefaultSubobject<UTargetTagRequirementsGameplayEffectComponent>(FName("Never care about this before1"));

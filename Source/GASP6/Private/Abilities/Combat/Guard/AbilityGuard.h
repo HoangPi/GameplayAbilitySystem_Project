@@ -32,4 +32,7 @@ public:
 		const FGameplayAbilityActivationInfo ActivationInfo,
 		bool bReplicateEndAbility,
 		bool bWasCancelled);
+
+	UPROPERTY(BlueprintReadOnly)
+	FActiveGameplayEffectHandle PerfectGuardEffectHandle;
 };

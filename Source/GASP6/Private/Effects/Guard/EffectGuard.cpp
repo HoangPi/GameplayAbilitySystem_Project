@@ -19,6 +19,7 @@ UEffectGuard::UEffectGuard()
 
     UTargetTagsGameplayEffectComponent *comp = this->CreateDefaultSubobject<UTargetTagsGameplayEffectComponent>(FName("Never cae"));
     ((FInheritedTagContainer &)comp->GetConfiguredTargetTagChanges()).AddTag(MyTags::PlayerState::guard);
+    ((FInheritedTagContainer &)comp->GetConfiguredTargetTagChanges()).AddTag(MyTags::PlayerState::combat);
     comp->SetAndApplyTargetTagChanges(comp->GetConfiguredTargetTagChanges());
 
     this->GEComponents.Add(comp);

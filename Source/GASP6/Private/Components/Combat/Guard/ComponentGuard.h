@@ -24,7 +24,10 @@ protected:
 	virtual void BeginPlay() override;
 
 	UInputAction *GuardAction;
+public:
+	// UPROPERTY(BlueprintReadOnly)
 	UAbilitySystemComponent *ownerASC;
+	// UPROPERTY(BlueprintReadOnly)
 	FGameplayAbilitySpecHandle GuardAbilitySpecHandle;
 
 public:

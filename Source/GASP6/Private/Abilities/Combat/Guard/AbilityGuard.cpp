@@ -9,7 +9,8 @@
 UAbilityGuard::UAbilityGuard()
 {
     this->InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
-    this->ActivationOwnedTags.AddTag(MyTags::PlayerState::combat);
+    // this->ActivationOwnedTags.AddTag(MyTags::PlayerState::combat);
+    this->ActivationOwnedTags.AddTag(MyTags::PlayerState::manual_guard);
 }
 
 void UAbilityGuard::ActivateAbility(
@@ -22,7 +23,7 @@ void UAbilityGuard::ActivateAbility(
     UAbilitySystemComponent *asc = this->GetAbilitySystemComponentFromActorInfo();
     if (!asc->HasMatchingGameplayTag(MyTags::PlayerState::guard) && asc->GetTagCount(MyTags::PlayerState::perfect_guard) < 2)
     {
-        this->ApplyGameplayEffectToOwner(
+        this->PerfectGuardEffectHandle = this->ApplyGameplayEffectToOwner(
             Handle,
             ActorInfo,
             ActivationInfo,
