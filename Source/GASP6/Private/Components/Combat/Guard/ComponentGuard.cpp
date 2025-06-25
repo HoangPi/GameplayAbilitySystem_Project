@@ -1,9 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Components/Combat/Guard/ComponentGuard.h"
 
 #include "GASP6/GASP6Character.h"
+#include "Abilities/Combat/Guard/AbilityGuard.h"
+#include "Effects/Guard/EffectPerfectGuard.h"
 
 // Sets default values for this component's properties
 UComponentGuard::UComponentGuard()
@@ -14,13 +15,14 @@ UComponentGuard::UComponentGuard()
 
 	// ...
 	AGASP6Character *owner = this->GetOwner<AGASP6Character>();
-	if(owner)
+	if (owner)
 	{
 		this->GuardAction = LoadObject<UInputAction>(nullptr, TEXT("/Game/ThirdPerson/Input/Actions/IA_Block.IA_Block"));
 		this->ownerASC = owner->GetAbilitySystemComponent();
+
+		this->GuardAbilitySpecHandle = this->ownerASC->K2_GiveAbility(UAbilityGuard::StaticClass());
 	}
 }
-
 
 // Called when the game starts
 void UComponentGuard::BeginPlay()
@@ -31,24 +33,32 @@ void UComponentGuard::BeginPlay()
 	this->SetupMyInputs();
 }
 
-
 // Called every frame
-void UComponentGuard::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UComponentGuard::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+	GEngine->AddOnScreenDebugMessage(
+		-1,
+		0.0f,
+		FColor::Green,
+		FString::Printf(
+			TEXT("%d stacks"),
+			ownerASC->GetGameplayEffectCount(UEffectPerfectGuard::StaticClass(), nullptr))
+		// FString::Printf(TEXT("%d stacks"), ownerASC->GetGameplayEffectCount(UEffectPerfectGuard::StaticClass()))
+	);
 }
 
 void UComponentGuard::SetupMyInputs()
 {
 	AGASP6Character *owner = this->GetOwner<AGASP6Character>();
-	if(owner)
+	if (owner)
 	{
 		UEnhancedInputComponent *input = Cast<UEnhancedInputComponent>(owner->InputComponent);
-		if(input)
+		if (input)
 		{
-			if(this->GuardAction)
+			if (this->GuardAction)
 			{
 				input->BindAction(this->GuardAction, ETriggerEvent::Started, this, &UComponentGuard::Guard);
 				input->BindAction(this->GuardAction, ETriggerEvent::Completed, this, &UComponentGuard::ReleaseGuard);
@@ -59,10 +69,10 @@ void UComponentGuard::SetupMyInputs()
 
 void UComponentGuard::Guard()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Purple, FString("Guarding"));
+	this->ownerASC->TryActivateAbility(this->GuardAbilitySpecHandle);
 }
 
 void UComponentGuard::ReleaseGuard()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Purple, FString("Guarding ja nai desu"));
+	this->ownerASC->CancelAbilityHandle(this->GuardAbilitySpecHandle);
 }

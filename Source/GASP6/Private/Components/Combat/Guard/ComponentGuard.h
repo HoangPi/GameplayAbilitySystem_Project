@@ -25,6 +25,7 @@ protected:
 
 	UInputAction *GuardAction;
 	UAbilitySystemComponent *ownerASC;
+	FGameplayAbilitySpecHandle GuardAbilitySpecHandle;
 
 public:
 	// Called every frame
