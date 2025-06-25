@@ -3,3 +3,22 @@
 
 #include "Effects/Guard/EffectGuard.h"
 
+#include "Tags/MyTagManager.h"
+
+UEffectGuard::UEffectGuard()
+{
+    this->StackingType = EGameplayEffectStackingType::None;
+    // this->StackLimitCount = 1;
+    // this->StackDurationRefreshPolicy = EGameplayEffectStackingDurationPolicy::RefreshOnSuccessfulApplication;
+    // this->StackExpirationPolicy = EGameplayEffectStackingExpirationPolicy::RemoveSingleStackAndRefreshDuration;
+    this->bDenyOverflowApplication = false;
+
+    this->DurationMagnitude = FGameplayEffectModifierMagnitude(5.0f);
+    this->DurationPolicy = EGameplayEffectDurationType::HasDuration;
+
+    UTargetTagsGameplayEffectComponent *comp = this->CreateDefaultSubobject<UTargetTagsGameplayEffectComponent>(FName("Never cae"));
+    ((FInheritedTagContainer &)comp->GetConfiguredTargetTagChanges()).AddTag(MyTags::PlayerState::guard);
+    comp->SetAndApplyTargetTagChanges(comp->GetConfiguredTargetTagChanges());
+
+    this->GEComponents.Add(comp);
+}
