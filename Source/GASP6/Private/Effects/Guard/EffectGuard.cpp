@@ -13,6 +13,7 @@ UEffectGuard::UEffectGuard()
     // this->StackExpirationPolicy = EGameplayEffectStackingExpirationPolicy::RemoveSingleStackAndRefreshDuration;
     this->bDenyOverflowApplication = false;
 
+    // TODO: Change to duration
     this->DurationMagnitude = FGameplayEffectModifierMagnitude(5.0f);
     this->DurationPolicy = EGameplayEffectDurationType::HasDuration;
 

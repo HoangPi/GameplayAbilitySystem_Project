@@ -13,6 +13,7 @@ UEffectPerfectGuard::UEffectPerfectGuard()
     this->StackLimitCount = 2;
 
     this->DurationPolicy = EGameplayEffectDurationType::HasDuration;
+    // TODO: Change to duration
     this->DurationMagnitude = FGameplayEffectModifierMagnitude(2.0f);
 
     UTargetTagsGameplayEffectComponent *comp = this->CreateDefaultSubobject<UTargetTagsGameplayEffectComponent>(FName("Never care about this before"));
