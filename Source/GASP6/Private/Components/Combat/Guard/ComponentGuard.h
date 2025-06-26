@@ -27,7 +27,7 @@ protected:
 public:
 	// UPROPERTY(BlueprintReadOnly)
 	UAbilitySystemComponent *ownerASC;
-	// UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly)
 	FGameplayAbilitySpecHandle GuardAbilitySpecHandle;
 
 public:
