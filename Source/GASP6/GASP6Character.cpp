@@ -61,7 +61,7 @@ AGASP6Character::AGASP6Character()
 	this->AbilitySystemComponent = this->CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("dontcare"));
 	this->CreateDefaultSubobject<UComponentMovement>(TEXT("my_movement_component"));
 	this->myLockonComponent = this->CreateDefaultSubobject<UComponentLockon>(TEXT("my_lockon_component"));
-	this->CreateDefaultSubobject<UComponentGuard>(TEXT("My guard component"));
+	this->myGuardComponent = this->CreateDefaultSubobject<UComponentGuard>(TEXT("My guard component"));
 }
 
 //////////////////////////////////////////////////////////////////////////

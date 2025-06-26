@@ -57,6 +57,9 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Components")
 	class UComponentLockon *myLockonComponent;
 
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Components")
+	class UComponentGuard *myGuardComponent;
+
 protected:
 
 	/** Called for movement input */
