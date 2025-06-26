@@ -7,9 +7,9 @@
 
 UEffectPerfectGuard::UEffectPerfectGuard()
 {
-    this->StackingType = EGameplayEffectStackingType::AggregateBySource;
+    this->StackingType = EGameplayEffectStackingType::AggregateByTarget;
     this->StackDurationRefreshPolicy = EGameplayEffectStackingDurationPolicy::NeverRefresh;
-    this->StackExpirationPolicy = EGameplayEffectStackingExpirationPolicy::RemoveSingleStackAndRefreshDuration;
+    this->StackExpirationPolicy = EGameplayEffectStackingExpirationPolicy::ClearEntireStack;
     this->StackLimitCount = 2;
 
     this->DurationPolicy = EGameplayEffectDurationType::HasDuration;

@@ -21,7 +21,9 @@ void UAbilityGuard::ActivateAbility(
 {
     Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
     UAbilitySystemComponent *asc = this->GetAbilitySystemComponentFromActorInfo();
-    if (!asc->HasMatchingGameplayTag(MyTags::PlayerState::guard) && asc->GetTagCount(MyTags::PlayerState::perfect_guard) < 2)
+    if (
+        !asc->HasMatchingGameplayTag(MyTags::PlayerState::guard) && 
+        asc->GetGameplayEffectCount(UEffectPerfectGuard::StaticClass(), nullptr) < 2)
     {
         this->PerfectGuardEffectHandle = this->ApplyGameplayEffectToOwner(
             Handle,
