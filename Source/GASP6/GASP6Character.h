@@ -51,13 +51,13 @@ class AGASP6Character : public ACharacter, public IAbilitySystemInterface
 public:
 	AGASP6Character();
 	
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Abilities")
+	// UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Abilities")
 	UAbilitySystemComponent* AbilitySystemComponent;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Components")
 	class UComponentLockon *myLockonComponent;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Components")
+	// UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Components")
 	class UComponentGuard *myGuardComponent;
 
 protected:

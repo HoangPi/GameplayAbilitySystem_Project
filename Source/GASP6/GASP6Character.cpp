@@ -58,10 +58,10 @@ AGASP6Character::AGASP6Character()
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 
 	// TODO: Maby cache the components
-	this->AbilitySystemComponent = this->CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("dontcare"));
-	this->CreateDefaultSubobject<UComponentMovement>(TEXT("my_movement_component"));
-	this->myLockonComponent = this->CreateDefaultSubobject<UComponentLockon>(TEXT("my_lockon_component"));
-	this->myGuardComponent = this->CreateDefaultSubobject<UComponentGuard>(TEXT("My guard component"));
+	this->AbilitySystemComponent = this->CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("MyASC"));
+	this->CreateDefaultSubobject<UComponentMovement>(TEXT("MyMovementComponent"));
+	this->myLockonComponent = this->CreateDefaultSubobject<UComponentLockon>(TEXT("myLockonComponent"));
+	this->myGuardComponent = this->CreateDefaultSubobject<UComponentGuard>(TEXT("MyGuardComponent"));
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -145,5 +145,5 @@ void AGASP6Character::Look(const FInputActionValue &Value)
 
 UAbilitySystemComponent *AGASP6Character::GetAbilitySystemComponent() const
 {
-	return AbilitySystemComponent;
+	return &(*AbilitySystemComponent);
 }
