@@ -22,7 +22,7 @@ void UAbilityGuard::ActivateAbility(
     Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
     UAbilitySystemComponent *asc = this->GetAbilitySystemComponentFromActorInfo();
     if (
-        !asc->HasMatchingGameplayTag(MyTags::PlayerState::guard) && 
+        !asc->HasMatchingGameplayTag(MyTags::PlayerState::guard) &&
         asc->GetGameplayEffectCount(UEffectPerfectGuard::StaticClass(), nullptr) < 2)
     {
         this->PerfectGuardEffectHandle = this->ApplyGameplayEffectToOwner(
@@ -33,7 +33,7 @@ void UAbilityGuard::ActivateAbility(
             this->GetAbilityLevel());
         return;
     }
-    this->ApplyGameplayEffectToOwner(
+    this->GuardEffectHandle = this->ApplyGameplayEffectToOwner(
         Handle,
         ActorInfo,
         ActivationInfo,
@@ -49,6 +49,4 @@ void UAbilityGuard::EndAbility(
     bool bWasCancelled)
 {
     Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
-    // UAbilitySystemComponent *asc = this->GetAbilitySystemComponentFromActorInfo();
-    // asc->RemoveLooseGameplayTag(MyTags::PlayerState::guard);
 }

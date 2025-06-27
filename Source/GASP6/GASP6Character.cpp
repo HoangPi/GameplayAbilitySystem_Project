@@ -14,6 +14,7 @@
 #include "Components/Movement/ComponentMovement.h"
 #include "Components/Combat/Lockon/ComponentLockon.h"
 #include "Components/Combat/Guard/ComponentGuard.h"
+#include "Abilities/Combat/HandleGetHit/AbilityHandleGetHit.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -58,10 +59,13 @@ AGASP6Character::AGASP6Character()
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 
 	// TODO: Maby cache the components
-	this->AbilitySystemComponent = this->CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("dontcare"));
-	this->CreateDefaultSubobject<UComponentMovement>(TEXT("my_movement_component"));
-	this->myLockonComponent = this->CreateDefaultSubobject<UComponentLockon>(TEXT("my_lockon_component"));
-	this->CreateDefaultSubobject<UComponentGuard>(TEXT("My guard component"));
+	this->AbilitySystemComponent = this->CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("MyASC"));
+	this->CreateDefaultSubobject<UComponentMovement>(TEXT("MyMovementComponent"));
+	this->myLockonComponent = this->CreateDefaultSubobject<UComponentLockon>(TEXT("myLockonComponent"));
+	this->myGuardComponent = this->CreateDefaultSubobject<UComponentGuard>(TEXT("MyGuardComponent"));
+	// This ability is triggered exclusively via event so shouldn't be contained in any component
+	// TODO: Maybe cache this ability
+	this->AbilitySystemComponent->K2_GiveAbility(UAbilityHandleGetHit::StaticClass());
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -145,5 +149,5 @@ void AGASP6Character::Look(const FInputActionValue &Value)
 
 UAbilitySystemComponent *AGASP6Character::GetAbilitySystemComponent() const
 {
-	return AbilitySystemComponent;
+	return &(*AbilitySystemComponent);
 }

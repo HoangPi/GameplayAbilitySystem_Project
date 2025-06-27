@@ -7,9 +7,9 @@
 
 UEffectGuard::UEffectGuard()
 {
-    this->StackingType = EGameplayEffectStackingType::None;
-    // this->StackLimitCount = 1;
-    // this->StackDurationRefreshPolicy = EGameplayEffectStackingDurationPolicy::RefreshOnSuccessfulApplication;
+    this->StackingType = EGameplayEffectStackingType::AggregateByTarget;
+    this->StackLimitCount = 1;
+    this->StackDurationRefreshPolicy = EGameplayEffectStackingDurationPolicy::RefreshOnSuccessfulApplication;
     // this->StackExpirationPolicy = EGameplayEffectStackingExpirationPolicy::RemoveSingleStackAndRefreshDuration;
     this->bDenyOverflowApplication = false;
 

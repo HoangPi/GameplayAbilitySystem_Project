@@ -24,6 +24,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	UInputAction *GuardAction;
+
 public:
 	// UPROPERTY(BlueprintReadOnly)
 	UAbilitySystemComponent *ownerASC;
@@ -33,6 +34,9 @@ public:
 public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
+
+	UFUNCTION(BlueprintCallable)
+	const FGameplayAbilitySpecHandle GetGuardAbilitySpecHandle() { return this->GuardAbilitySpecHandle; };
 
 private:
 	void SetupMyInputs();

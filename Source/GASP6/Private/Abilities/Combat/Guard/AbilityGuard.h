@@ -35,4 +35,6 @@ public:
 
 	UPROPERTY(BlueprintReadOnly)
 	FActiveGameplayEffectHandle PerfectGuardEffectHandle;
+
+	FActiveGameplayEffectHandle GuardEffectHandle;
 };
