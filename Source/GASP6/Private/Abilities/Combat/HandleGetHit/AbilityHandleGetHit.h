@@ -7,11 +7,23 @@
 #include "AbilityHandleGetHit.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class UAbilityHandleGetHit : public UGameplayAbility
 {
 	GENERATED_BODY()
-	
+
+public:
+	UAbilityHandleGetHit();
+
+	void ActivateAbility(
+		FGameplayAbilitySpecHandle Handle,
+		const FGameplayAbilityActorInfo *ActorInfo,
+		FGameplayAbilityActivationInfo ActivationInfo,
+		const FGameplayEventData *TriggerEventData);
+
+private:
+	class UAbilityGuard *MyAbilityGuard = nullptr;
+	void FindMyAbilityGuard();
 };
