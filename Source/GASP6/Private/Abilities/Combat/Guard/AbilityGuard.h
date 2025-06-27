@@ -37,7 +37,4 @@ public:
 	FActiveGameplayEffectHandle PerfectGuardEffectHandle;
 
 	FActiveGameplayEffectHandle GuardEffectHandle;
-	
-	UFUNCTION(BlueprintCallable)
-	void HandleGetHit();
 };
