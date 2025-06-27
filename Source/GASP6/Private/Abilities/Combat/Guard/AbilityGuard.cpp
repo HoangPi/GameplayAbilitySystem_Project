@@ -22,7 +22,7 @@ void UAbilityGuard::ActivateAbility(
     Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
     UAbilitySystemComponent *asc = this->GetAbilitySystemComponentFromActorInfo();
     if (
-        !asc->HasMatchingGameplayTag(MyTags::PlayerState::guard) && 
+        !asc->HasMatchingGameplayTag(MyTags::PlayerState::guard) &&
         asc->GetGameplayEffectCount(UEffectPerfectGuard::StaticClass(), nullptr) < 2)
     {
         this->PerfectGuardEffectHandle = this->ApplyGameplayEffectToOwner(
@@ -33,7 +33,7 @@ void UAbilityGuard::ActivateAbility(
             this->GetAbilityLevel());
         return;
     }
-    this->ApplyGameplayEffectToOwner(
+    this->GuardEffectHandle = this->ApplyGameplayEffectToOwner(
         Handle,
         ActorInfo,
         ActivationInfo,
@@ -49,6 +49,29 @@ void UAbilityGuard::EndAbility(
     bool bWasCancelled)
 {
     Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
-    // UAbilitySystemComponent *asc = this->GetAbilitySystemComponentFromActorInfo();
-    // asc->RemoveLooseGameplayTag(MyTags::PlayerState::guard);
+}
+
+void UAbilityGuard::HandleGetHit()
+{
+    UAbilitySystemComponent *asc = this->GetAbilitySystemComponentFromActorInfo();
+    if (asc->GetGameplayEffectCount(UEffectPerfectGuard::StaticClass(), nullptr) > 0)
+    {
+        asc->RemoveActiveGameplayEffect(this->PerfectGuardEffectHandle, 1);
+        // TODO: run perfect guard instant effect
+        return;
+    }
+    if (asc->HasMatchingGameplayTag(MyTags::PlayerState::guard))
+    {
+        asc->RemoveActiveGameplayEffect(this->GuardEffectHandle, -1);
+        // TODO: run guard instant effect
+        // asc->RemoveLooseGameplayTag(MyTags::PlayerState::guard);
+        return;
+    }
+    if (asc->HasMatchingGameplayTag(MyTags::PlayerState::manual_guard))
+    {
+        // TODO: run guard instant effect
+        GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, FString("Manually blocked"));
+        return;
+    }
+    // TODO: Run get hit instant effect
 }
