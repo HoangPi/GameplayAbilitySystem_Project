@@ -14,6 +14,7 @@
 #include "Components/Movement/ComponentMovement.h"
 #include "Components/Combat/Lockon/ComponentLockon.h"
 #include "Components/Combat/Guard/ComponentGuard.h"
+#include "Abilities/Combat/HandleGetHit/AbilityHandleGetHit.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -62,6 +63,9 @@ AGASP6Character::AGASP6Character()
 	this->CreateDefaultSubobject<UComponentMovement>(TEXT("MyMovementComponent"));
 	this->myLockonComponent = this->CreateDefaultSubobject<UComponentLockon>(TEXT("myLockonComponent"));
 	this->myGuardComponent = this->CreateDefaultSubobject<UComponentGuard>(TEXT("MyGuardComponent"));
+	// This ability is triggered exclusively via event so shouldn't be contained in any component
+	// TODO: Maybe cache this ability
+	this->AbilitySystemComponent->K2_GiveAbility(UAbilityHandleGetHit::StaticClass());
 }
 
 //////////////////////////////////////////////////////////////////////////
