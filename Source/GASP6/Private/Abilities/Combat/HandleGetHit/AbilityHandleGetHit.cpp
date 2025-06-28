@@ -7,6 +7,7 @@
 #include "Effects/Guard/EffectGuard.h"
 #include "Effects/Guard/EffectPerfectGuard.h"
 #include "Effects/Health/EffectHealthModifier.h"
+#include "Effects/Stamina/EffectStaminaInstant.h"
 #include "AbilityHandleGetHit.h"
 
 UAbilityHandleGetHit::UAbilityHandleGetHit()
@@ -17,6 +18,7 @@ UAbilityHandleGetHit::UAbilityHandleGetHit()
     this->AbilityTriggers.Add(triggerEvent);
 }
 
+// TODO: promote those logics into a function
 void UAbilityHandleGetHit::ActivateAbility(
     FGameplayAbilitySpecHandle Handle,
     const FGameplayAbilityActorInfo *ActorInfo,
@@ -34,21 +36,34 @@ void UAbilityHandleGetHit::ActivateAbility(
     }
     if (asc->GetGameplayEffectCount(UEffectPerfectGuard::StaticClass(), nullptr) > 0)
     {
+        // Remove a perfect guard stack
         asc->RemoveActiveGameplayEffect(this->MyAbilityGuard->PerfectGuardEffectHandle, 1);
-        // TODO: run perfect guard instant effect
+        // Reduce stamina
+        FGameplayEffectSpecHandle effectSpecHandle = this->MakeOutgoingGameplayEffectSpec(
+            UEffectStaminaInstant::StaticClass(),
+            this->GetAbilityLevel());
+        effectSpecHandle.Data.Get()->SetSetByCallerMagnitude(MyTags::Effect::stamina, -TriggerEventData->EventMagnitude/2);
+        this->ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, effectSpecHandle);
         return;
     }
     if (asc->HasMatchingGameplayTag(MyTags::PlayerState::guard))
     {
         asc->RemoveActiveGameplayEffect(this->MyAbilityGuard->GuardEffectHandle, -1);
-        // TODO: run guard instant effect
-        // asc->RemoveLooseGameplayTag(MyTags::PlayerState::guard);
+        FGameplayEffectSpecHandle effectSpecHandle = this->MakeOutgoingGameplayEffectSpec(
+            UEffectStaminaInstant::StaticClass(),
+            this->GetAbilityLevel());
+        effectSpecHandle.Data.Get()->SetSetByCallerMagnitude(MyTags::Effect::stamina, -TriggerEventData->EventMagnitude);
+        this->ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, effectSpecHandle);
         return;
     }
     if (asc->HasMatchingGameplayTag(MyTags::PlayerState::manual_guard))
     {
-        // TODO: run guard instant effect
         GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, FString("Manually blocked"));
+        FGameplayEffectSpecHandle effectSpecHandle = this->MakeOutgoingGameplayEffectSpec(
+            UEffectStaminaInstant::StaticClass(),
+            this->GetAbilityLevel());
+        effectSpecHandle.Data.Get()->SetSetByCallerMagnitude(MyTags::Effect::stamina, -TriggerEventData->EventMagnitude);
+        this->ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, effectSpecHandle);
         return;
     }
     FGameplayEffectSpecHandle effectSpecHandle = this->MakeOutgoingGameplayEffectSpec(
