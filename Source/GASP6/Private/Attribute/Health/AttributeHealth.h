@@ -13,5 +13,18 @@ UCLASS()
 class UAttributeHealth : public UAttributeSet
 {
 	GENERATED_BODY()
-	
+
+public:
+	UAttributeHealth();
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FGameplayAttributeData Health;
+	GAMEPLAYATTRIBUTE_PROPERTY_GETTER(UAttributeHealth, Health)
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FGameplayAttributeData MaxHealth;
+	GAMEPLAYATTRIBUTE_PROPERTY_GETTER(UAttributeHealth, MaxHealth)
+
+private:
+	inline virtual void PreAttributeChange(const FGameplayAttribute &Attribute, float &NewValue) const;
 };
