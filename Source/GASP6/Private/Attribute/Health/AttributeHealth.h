@@ -32,7 +32,7 @@ public:
 	FGameplayAttributeData MaxHealth;
 	GAMEPLAYATTRIBUTE_PROPERTY_GETTER(UAttributeHealth, MaxHealth)
 
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(BlueprintAssignable)
 	FOnHealthChange OnHealthChangeEvent;
 
 private:
