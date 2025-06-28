@@ -35,7 +35,7 @@ void UAbilitySprint::ActivateAbility(
             this->GetAbilityLevel(),
             this->GetAbilitySystemComponentFromActorInfo()->MakeEffectContext());
         // TODO: Apply logic (mainly from ability level) to adjust the magnitude
-        specHandle.Data.Get()->SetSetByCallerMagnitude(MyTags::Effect::Stamina::drain, -2.7f);
+        specHandle.Data.Get()->SetSetByCallerMagnitude(MyTags::Effect::Stamina::drain, -0.9f);
 
         this->effectDrainStamina = this->GetAbilitySystemComponentFromActorInfo()->ApplyGameplayEffectSpecToSelf(*specHandle.Data.Get());
     }

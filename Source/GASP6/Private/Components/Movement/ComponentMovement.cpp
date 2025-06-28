@@ -58,7 +58,7 @@ void UComponentMovement::BeginPlay()
 		UEffectRecoverStamina::StaticClass(),
 		1.0f,
 		this->ownerASC->MakeEffectContext());
-	effectSpec.Data.Get()->SetSetByCallerMagnitude(MyTags::Effect::Stamina::recover, 2.1f);
+	effectSpec.Data.Get()->SetSetByCallerMagnitude(MyTags::Effect::Stamina::recover, 1.1f);
 
 	// TODO: Cache the effect to cancel it when neccessary
 	this->ownerASC->ApplyGameplayEffectSpecToSelf(*effectSpec.Data.Get());

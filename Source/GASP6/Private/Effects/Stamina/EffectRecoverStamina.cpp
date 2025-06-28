@@ -9,7 +9,7 @@
 UEffectRecoverStamina::UEffectRecoverStamina()
 {
     this->DurationPolicy = EGameplayEffectDurationType::Infinite;
-    this->Period = 0.1f;
+    this->Period = 0.0166f;
 
     FGameplayModifierInfo mod;
     
