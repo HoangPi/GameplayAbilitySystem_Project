@@ -60,6 +60,8 @@ public:
 	// UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Components")
 	class UComponentGuard *myGuardComponent;
 
+	class UAttributeHealth *Health;
+
 protected:
 
 	/** Called for movement input */
@@ -83,5 +85,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
+	UFUNCTION()
+	void CheckNegativeHealth(float percentage);
 };
 
