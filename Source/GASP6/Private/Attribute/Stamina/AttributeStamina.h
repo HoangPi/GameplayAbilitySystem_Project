@@ -13,6 +13,9 @@
 /**
  *
  */
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStaminaChange, float, Percentage);
+
 UCLASS()
 class UAttributeStamina : public UAttributeSet
 {
@@ -38,4 +41,7 @@ private:
 public:
 	void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue);
 	void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data);
+
+	UPROPERTY(BlueprintAssignable, Category = "Attributes")
+	FOnStaminaChange OnStaminaChange;
 };

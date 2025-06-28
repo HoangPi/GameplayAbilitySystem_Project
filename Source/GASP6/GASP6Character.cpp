@@ -15,6 +15,7 @@
 #include "Components/Combat/Lockon/ComponentLockon.h"
 #include "Components/Combat/Guard/ComponentGuard.h"
 #include "Abilities/Combat/HandleGetHit/AbilityHandleGetHit.h"
+#include "Attribute/Health/AttributeHealth.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -66,6 +67,10 @@ AGASP6Character::AGASP6Character()
 	// This ability is triggered exclusively via event so shouldn't be contained in any component
 	// TODO: Maybe cache this ability
 	this->AbilitySystemComponent->K2_GiveAbility(UAbilityHandleGetHit::StaticClass());
+
+	this->Health = this->CreateDefaultSubobject<UAttributeHealth>(TEXT("MyHealthAttribute"));
+	this->AbilitySystemComponent->AddAttributeSetSubobject<UAttributeHealth>(this->Health);
+	this->Health->OnHealthChangeEvent.AddDynamic(this, &AGASP6Character::CheckNegativeHealth);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -150,4 +155,12 @@ void AGASP6Character::Look(const FInputActionValue &Value)
 UAbilitySystemComponent *AGASP6Character::GetAbilitySystemComponent() const
 {
 	return &(*AbilitySystemComponent);
+}
+
+void AGASP6Character::CheckNegativeHealth(float percentage)
+{
+	if(percentage <= 0.0f)
+	{
+		this->Destroy();
+	}
 }

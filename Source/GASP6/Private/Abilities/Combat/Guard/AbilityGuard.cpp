@@ -10,7 +10,11 @@ UAbilityGuard::UAbilityGuard()
 {
     this->InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
     // this->ActivationOwnedTags.AddTag(MyTags::PlayerState::combat);
+    this->ActivationBlockedTags.AddTag(MyTags::PlayerState::down);
     this->ActivationOwnedTags.AddTag(MyTags::PlayerState::manual_guard);
+
+    ((FGameplayTagContainer &)this->GetAssetTags()).AddTag(MyTags::Ability::Requirement::stamina);
+    this->SetAssetTags(this->GetAssetTags());
 }
 
 void UAbilityGuard::ActivateAbility(

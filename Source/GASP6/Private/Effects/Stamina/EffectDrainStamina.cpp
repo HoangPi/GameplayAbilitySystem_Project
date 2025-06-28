@@ -8,7 +8,7 @@
 UEffectDrainStamina::UEffectDrainStamina()
 {
     this->DurationPolicy = EGameplayEffectDurationType::Infinite;
-    this->Period = 0.1f;
+    this->Period = 0.0166f;
     this->StackingType = EGameplayEffectStackingType::None;
     ((FGameplayTagContainer &)this->GetAssetTags()).AddTag(MyTags::Effect::Stamina::drain);
 
