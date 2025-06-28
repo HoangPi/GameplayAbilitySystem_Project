@@ -4,11 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "AttributeSet.h"
+
+#include "GameplayEffectExtension.h"
+#include "GameplayEffectTypes.h"
+
 #include "AttributeHealth.generated.h"
 
 /**
  * 
  */
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChange, float, percentage);
+
 UCLASS()
 class UAttributeHealth : public UAttributeSet
 {
@@ -25,6 +32,10 @@ public:
 	FGameplayAttributeData MaxHealth;
 	GAMEPLAYATTRIBUTE_PROPERTY_GETTER(UAttributeHealth, MaxHealth)
 
+	UPROPERTY(BlueprintReadWrite)
+	FOnHealthChange OnHealthChangeEvent;
+
 private:
 	inline virtual void PreAttributeChange(const FGameplayAttribute &Attribute, float &NewValue) const;
+	inline virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData &Data);
 };

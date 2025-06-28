@@ -25,3 +25,11 @@ void UAttributeHealth::PreAttributeChange(const FGameplayAttribute &Attribute, f
         NewValue = CLAMP(NewValue, max, 0.0f);
     }
 }
+
+void UAttributeHealth::PostGameplayEffectExecute(const FGameplayEffectModCallbackData &Data)
+{
+    if(Data.EvaluatedData.Attribute == UAttributeHealth::GetHealthAttribute())
+    {
+        this->OnHealthChangeEvent.Broadcast(this->Health.GetCurrentValue()/this->MaxHealth.GetCurrentValue());
+    }
+}
