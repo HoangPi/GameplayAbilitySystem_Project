@@ -6,6 +6,8 @@
 #include "Abilities/Combat/Guard/AbilityGuard.h"
 #include "Effects/Guard/EffectGuard.h"
 #include "Effects/Guard/EffectPerfectGuard.h"
+#include "Effects/Health/EffectHealthModifier.h"
+#include "AbilityHandleGetHit.h"
 
 UAbilityHandleGetHit::UAbilityHandleGetHit()
 {
@@ -21,12 +23,12 @@ void UAbilityHandleGetHit::ActivateAbility(
     FGameplayAbilityActivationInfo ActivationInfo,
     const FGameplayEventData *TriggerEventData)
 {
-    if(!TriggerEventData)
+    if (!TriggerEventData)
     {
         return;
     }
     UAbilitySystemComponent *asc = this->GetAbilitySystemComponentFromActorInfo();
-    if(!this->MyAbilityGuard)
+    if (!this->MyAbilityGuard)
     {
         this->FindMyAbilityGuard();
     }
@@ -49,7 +51,11 @@ void UAbilityHandleGetHit::ActivateAbility(
         GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, FString("Manually blocked"));
         return;
     }
-    // TODO: Run get hit instant effect
+    FGameplayEffectSpecHandle effectSpecHandle = this->MakeOutgoingGameplayEffectSpec(
+        UEffectHealthModifier::StaticClass(),
+        this->GetAbilityLevel());
+    effectSpecHandle.Data.Get()->SetSetByCallerMagnitude(MyTags::Effect::health, -TriggerEventData->EventMagnitude);
+    this->ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, effectSpecHandle);
 }
 
 void UAbilityHandleGetHit::FindMyAbilityGuard()
