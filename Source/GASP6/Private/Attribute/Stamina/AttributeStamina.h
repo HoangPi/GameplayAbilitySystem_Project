@@ -15,7 +15,6 @@
  */
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStaminaChange, float, Percentage);
-DECLARE_DYNAMIC_DELEGATE_OneParam(FTestDelegate, float, Percentage);
 
 UCLASS()
 class UAttributeStamina : public UAttributeSet
@@ -45,7 +44,4 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Attributes")
 	FOnStaminaChange OnStaminaChange;
-
-	UPROPERTY(BlueprintReadWrite, Category = "Attributes")
-	FTestDelegate MyTestDelegate;
 };
