@@ -8,6 +8,8 @@
 #include "Components/BoxComponent.h"
 #include "Components/ArrowComponent.h"
 #include "GameFramework/Actor.h"
+#include "AbilitySystemComponent.h"
+#include "AbilitySystemGlobals.h"
 
 #include "Projectile.generated.h"
 
@@ -38,6 +40,15 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "ProjectileBehavior")
 	bool WaitForTarget = true;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
+	float Damage;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
+	FGameplayTagContainer ProjectileTags;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
+	FGameplayEventData payload;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -46,5 +57,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	virtual void NotifyActorBeginOverlap(AActor *OtherActor);
 
 };

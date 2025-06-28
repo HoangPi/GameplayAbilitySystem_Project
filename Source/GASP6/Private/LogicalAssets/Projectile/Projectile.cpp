@@ -4,6 +4,7 @@
 
 #include "Kismet/KismetMathLibrary.h"
 #include "Ultilities/MyMacros.h"
+#include "Tags/MyTagManager.h"
 
 // Sets default values
 AProjectile::AProjectile()
@@ -12,17 +13,21 @@ AProjectile::AProjectile()
 	PrimaryActorTick.bCanEverTick = true;
 	this->SetLifeSpan(3.0f);
 
+	// Set up the collision box
 	this->CollisionBox = this->CreateDefaultSubobject<UBoxComponent>("My_Collision_Box");
 	this->RootComponent = this->CollisionBox;
 	this->CollisionBox->SetBoxExtent(FVector(20.0f));
 	this->CollisionBox->SetCollisionObjectType(ECollisionChannel::ECC_EngineTraceChannel2);
 
+	// Set up forward arrow
 	this->ForwardArrow = this->CreateDefaultSubobject<UArrowComponent>("My_Foward_Arrow");
 	this->ForwardArrow->SetupAttachment(this->RootComponent);
 	this->ForwardArrow->SetWorldRotation(this->GetActorRotation());
 
+	// Set up attributes
 	this->Speed = 850.0f;
 	this->MaxTurningSpeed = 48.0f;
+	this->Damage = 20.0f;
 }
 
 // Called when the game starts or when spawned
@@ -30,6 +35,8 @@ void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	this->payload.EventMagnitude = this->Damage;
+	this->payload.TargetTags = this->ProjectileTags;
 }
 
 // Called every frame
@@ -67,4 +74,16 @@ void AProjectile::UpdateProjectileRotation(float DeltaTime)
 			CurrentRotation.Roll + CLAMP(Diff.Roll, max, min)
 		)
 	);
+}
+
+void AProjectile::NotifyActorBeginOverlap(AActor *OtherActor)
+{
+	if(OtherActor)
+	{
+		if(UAbilitySystemComponent *asc = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(OtherActor))
+		{
+			asc->HandleGameplayEvent(MyTags::Ability::attacked, &this->payload);
+		}
+	}
+	this->Destroy();
 }
