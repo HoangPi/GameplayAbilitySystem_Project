@@ -13,5 +13,8 @@ UCLASS()
 class UEffectHealthModifier : public UGameplayEffect
 {
 	GENERATED_BODY()
+
+public:
+	UEffectHealthModifier();
 	
 };
