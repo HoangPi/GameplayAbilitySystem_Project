@@ -13,5 +13,7 @@ UCLASS()
 class UEffectStaminaInstant : public UGameplayEffect
 {
 	GENERATED_BODY()
-	
+
+public:
+	UEffectStaminaInstant();
 };
