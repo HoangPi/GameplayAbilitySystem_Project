@@ -8,7 +8,9 @@
 #include "Effects/Guard/EffectPerfectGuard.h"
 #include "Effects/Health/EffectHealthModifier.h"
 #include "Effects/Stamina/EffectStaminaInstant.h"
+#include "Attribute/Stamina/AttributeStamina.h"
 #include "AbilityHandleGetHit.h"
+#include "Effects/PlayerStates/EffectPlayerDown.h"
 
 UAbilityHandleGetHit::UAbilityHandleGetHit()
 {
@@ -42,7 +44,7 @@ void UAbilityHandleGetHit::ActivateAbility(
         FGameplayEffectSpecHandle effectSpecHandle = this->MakeOutgoingGameplayEffectSpec(
             UEffectStaminaInstant::StaticClass(),
             this->GetAbilityLevel());
-        effectSpecHandle.Data.Get()->SetSetByCallerMagnitude(MyTags::Effect::stamina, -TriggerEventData->EventMagnitude/2);
+        effectSpecHandle.Data.Get()->SetSetByCallerMagnitude(MyTags::Effect::stamina, -TriggerEventData->EventMagnitude / 2);
         this->ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, effectSpecHandle);
         return;
     }
@@ -54,6 +56,17 @@ void UAbilityHandleGetHit::ActivateAbility(
             this->GetAbilityLevel());
         effectSpecHandle.Data.Get()->SetSetByCallerMagnitude(MyTags::Effect::stamina, -TriggerEventData->EventMagnitude);
         this->ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, effectSpecHandle);
+        // TODO: Maybe move this logic else where
+        if (
+            ((UAttributeStamina *)this->GetAbilitySystemComponentFromActorInfo()->GetAttributeSet(UAttributeStamina::StaticClass()))->Stamina.GetCurrentValue() < TriggerEventData->EventMagnitude)
+        {
+            this->ApplyGameplayEffectToOwner(
+                Handle,
+                ActorInfo,
+                ActivationInfo,
+                (UEffectPlayerDown *)UEffectPlayerDown::StaticClass()->GetDefaultObject(),
+                this->GetAbilityLevel());
+        }
         return;
     }
     if (asc->HasMatchingGameplayTag(MyTags::PlayerState::manual_guard))
@@ -64,6 +77,23 @@ void UAbilityHandleGetHit::ActivateAbility(
             this->GetAbilityLevel());
         effectSpecHandle.Data.Get()->SetSetByCallerMagnitude(MyTags::Effect::stamina, -TriggerEventData->EventMagnitude);
         this->ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, effectSpecHandle);
+        // TODO: Maybe move this logic else where
+        if (
+            ((UAttributeStamina *)this->GetAbilitySystemComponentFromActorInfo()->GetAttributeSet(UAttributeStamina::StaticClass()))->Stamina.GetCurrentValue() < TriggerEventData->EventMagnitude)
+        {
+            this->ApplyGameplayEffectToOwner(
+                Handle,
+                ActorInfo,
+                ActivationInfo,
+                (UEffectPlayerDown *)UEffectPlayerDown::StaticClass()->GetDefaultObject(),
+                this->GetAbilityLevel());
+            FGameplayTagContainer container;
+            container.AddTag(MyTags::Ability::Requirement::stamina);
+            this->GetAbilitySystemComponentFromActorInfo()->CancelAbilities(&container);
+        }
+        // TODO: Consider change this implementation
+        this->GetAbilitySystemComponentFromActorInfo()->AddLooseGameplayTag(MyTags::PlayerState::combat);
+        this->GetAbilitySystemComponentFromActorInfo()->RemoveLooseGameplayTag(MyTags::PlayerState::combat);
         return;
     }
     FGameplayEffectSpecHandle effectSpecHandle = this->MakeOutgoingGameplayEffectSpec(
