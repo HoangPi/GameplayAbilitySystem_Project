@@ -3,6 +3,8 @@
 #include "Attribute/Stamina/AttributeStamina.h"
 
 #include "Tags/MyTagManager.h"
+#include "Ultilities/MyMacros.h"
+#include "GASP6/GASP6Character.h"
 
 UAttributeStamina::UAttributeStamina()
 {
@@ -25,11 +27,7 @@ void UAttributeStamina::PreAttributeChange(const FGameplayAttribute &Attribute, 
     if (Attribute == UAttributeStamina::GetStaminaAttribute())
     {
         float max = this->MaxStamina.GetCurrentValue();
-        NewValue = (NewValue >= max
-                        ? max
-                        : (NewValue <= 0.0f
-                               ? 0.0f
-                               : NewValue));
+        NewValue = CLAMP(NewValue, max, 0.0f);
     }
 }
 
@@ -38,10 +36,15 @@ void UAttributeStamina::PostGameplayEffectExecute(const FGameplayEffectModCallba
     Super::PostGameplayEffectExecute(Data);
     float current;
     float max;
+    AGASP6Character *owner = Cast<AGASP6Character>(Data.Target.GetOwnerActor());
+    if (owner)
+    {
+    }
     if (Data.EvaluatedData.Attribute == UAttributeStamina::GetStaminaAttribute())
     {
         current = this->Stamina.GetCurrentValue();
         max = this->MaxStamina.GetCurrentValue();
+        this->OnStaminaChange.Broadcast(current/max);
         if (current <= 0)
         {
             Data.Target.CancelAbilities(&this->abilitiesToCancel);
