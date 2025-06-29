@@ -92,5 +92,7 @@ public:
 
 	UFUNCTION()
 	void CheckNegativeHealth(float percentage);
+
+	void Jump();
 };
 

@@ -104,7 +104,7 @@ void AGASP6Character::SetupPlayerInputComponent(UInputComponent *PlayerInputComp
 	{
 
 		// Jumping
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &AGASP6Character::Jump);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 
 		// Moving
@@ -122,6 +122,10 @@ void AGASP6Character::SetupPlayerInputComponent(UInputComponent *PlayerInputComp
 void AGASP6Character::Move(const FInputActionValue &Value)
 {
 	// input is a Vector2D
+	if(this->IsPlayerDown)
+	{
+		return;
+	}
 	FVector2D MovementVector = Value.Get<FVector2D>();
 
 	if (Controller != nullptr)
@@ -169,5 +173,13 @@ void AGASP6Character::CheckNegativeHealth(float percentage)
 	if (percentage <= 0.0f)
 	{
 		this->Destroy();
+	}
+}
+
+void AGASP6Character::Jump()
+{
+	if(!this->IsPlayerDown)
+	{
+		Super::Jump();
 	}
 }
