@@ -66,11 +66,18 @@ AGASP6Character::AGASP6Character()
 	this->myGuardComponent = this->CreateDefaultSubobject<UComponentGuard>(TEXT("MyGuardComponent"));
 	// This ability is triggered exclusively via event so shouldn't be contained in any component
 	// TODO: Maybe cache this ability
-	this->AbilitySystemComponent->K2_GiveAbility(UAbilityHandleGetHit::StaticClass());
 
 	this->Health = this->CreateDefaultSubobject<UAttributeHealth>(TEXT("MyHealthAttribute"));
 	this->AbilitySystemComponent->AddAttributeSetSubobject<UAttributeHealth>(this->Health);
 	this->Health->OnHealthChangeEvent.AddDynamic(this, &AGASP6Character::CheckNegativeHealth);
+}
+
+void AGASP6Character::BeginPlay()
+{
+	Super::BeginPlay();
+	FGameplayAbilitySpecHandle getHitHandle = this->AbilitySystemComponent->K2_GiveAbility(UAbilityHandleGetHit::StaticClass());
+	((UAbilityHandleGetHit *)this->AbilitySystemComponent->FindAbilitySpecFromHandle(getHitHandle)->GetPrimaryInstance())->NotifyPlayerDown.BindLambda([this]()
+																																					   { this->IsPlayerDown = true; });
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -159,7 +166,7 @@ UAbilitySystemComponent *AGASP6Character::GetAbilitySystemComponent() const
 
 void AGASP6Character::CheckNegativeHealth(float percentage)
 {
-	if(percentage <= 0.0f)
+	if (percentage <= 0.0f)
 	{
 		this->Destroy();
 	}

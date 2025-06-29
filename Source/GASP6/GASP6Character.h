@@ -69,6 +69,8 @@ protected:
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
+
+	bool IsPlayerDown = false;
 			
 
 protected:
@@ -85,6 +87,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
+	void BeginPlay();
 
 	UFUNCTION()
 	void CheckNegativeHealth(float percentage);
