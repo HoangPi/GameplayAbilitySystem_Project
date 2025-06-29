@@ -9,6 +9,9 @@
 /**
  *
  */
+
+DECLARE_DELEGATE(FNotifyPlayerDown);
+
 UCLASS()
 class UAbilityHandleGetHit : public UGameplayAbility
 {
@@ -22,6 +25,8 @@ public:
 		const FGameplayAbilityActorInfo *ActorInfo,
 		FGameplayAbilityActivationInfo ActivationInfo,
 		const FGameplayEventData *TriggerEventData);
+	
+	FNotifyPlayerDown NotifyPlayerDown;
 
 private:
 	class UAbilityGuard *MyAbilityGuard = nullptr;
