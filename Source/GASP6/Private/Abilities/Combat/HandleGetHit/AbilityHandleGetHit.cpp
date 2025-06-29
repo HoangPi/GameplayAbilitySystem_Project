@@ -37,11 +37,11 @@ void UAbilityHandleGetHit::ActivateAbility(
     {
         return;
     }
-    UAbilitySystemComponent *asc = this->GetAbilitySystemComponentFromActorInfo();
     if (!this->MyAbilityGuard)
     {
         this->FindMyAbilityGuard();
     }
+    UAbilitySystemComponent *asc = this->GetAbilitySystemComponentFromActorInfo();
     FGameplayEffectSpecHandle effectSpecHandle;
     bool perfectGuard = false;
     // If has PERFECT GUARD tag, only reduce stamina by half of the magnitude
