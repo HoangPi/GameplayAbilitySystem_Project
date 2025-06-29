@@ -15,6 +15,7 @@ UAbilityGuard::UAbilityGuard()
 
     ((FGameplayTagContainer &)this->GetAssetTags()).AddTag(MyTags::Ability::Requirement::stamina);
     this->SetAssetTags(this->GetAssetTags());
+    this->CancelAbilitiesWithTag.AddTag(MyTags::PlayerState::down);
 }
 
 void UAbilityGuard::ActivateAbility(
