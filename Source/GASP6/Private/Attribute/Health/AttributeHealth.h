@@ -36,6 +36,6 @@ public:
 	FOnHealthChange OnHealthChangeEvent;
 
 private:
-	inline virtual void PreAttributeChange(const FGameplayAttribute &Attribute, float &NewValue) const;
+	inline virtual void PreAttributeChange(const FGameplayAttribute &Attribute, float &NewValue);
 	inline virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData &Data);
 };
