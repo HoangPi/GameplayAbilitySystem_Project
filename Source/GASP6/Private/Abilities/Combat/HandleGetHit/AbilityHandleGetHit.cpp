@@ -84,6 +84,7 @@ void UAbilityHandleGetHit::ActivateAbility(
             (UEffectPlayerDown *)UEffectPlayerDown::StaticClass()->GetDefaultObject(),
             1.0f);
     }
+    Super::EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
 }
 
 void UAbilityHandleGetHit::FindMyAbilityGuard()
