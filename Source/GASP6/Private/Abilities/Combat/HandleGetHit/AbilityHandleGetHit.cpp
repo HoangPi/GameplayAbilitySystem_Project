@@ -99,7 +99,7 @@ FGameplayEffectSpecHandle UAbilityHandleGetHit::CreateEffectSpecHandle(
     TSubclassOf<UGameplayEffect> GameplayEffectClass,
     FGameplayTag DataTag,
     float Magnitude,
-    float Level = (1.0F))
+    float Level)
 {
     FGameplayEffectSpecHandle effectSpecHandle = this->MakeOutgoingGameplayEffectSpec(GameplayEffectClass, Level);
     effectSpecHandle.Data.Get()->SetSetByCallerMagnitude(DataTag, Magnitude);
