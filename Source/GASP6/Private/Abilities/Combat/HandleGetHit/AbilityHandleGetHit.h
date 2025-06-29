@@ -26,4 +26,12 @@ public:
 private:
 	class UAbilityGuard *MyAbilityGuard = nullptr;
 	void FindMyAbilityGuard();
+
+	inline FGameplayEffectSpecHandle CreateEffectSpecHandle(
+		TSubclassOf<UGameplayEffect> GameplayEffectClass,
+		FGameplayTag DataTag,
+		float Magnitude,
+		float Level = (1.0F));
+
+	FGameplayTagContainer GuardContainer;
 };
