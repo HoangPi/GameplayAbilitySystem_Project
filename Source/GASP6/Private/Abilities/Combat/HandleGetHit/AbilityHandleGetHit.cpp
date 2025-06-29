@@ -25,7 +25,6 @@ UAbilityHandleGetHit::UAbilityHandleGetHit()
     this->ActivationOwnedTags.AddTag(MyTags::PlayerState::combat);
 }
 
-// TODO: promote those logics into a function
 void UAbilityHandleGetHit::ActivateAbility(
     FGameplayAbilitySpecHandle Handle,
     const FGameplayAbilityActorInfo *ActorInfo,
