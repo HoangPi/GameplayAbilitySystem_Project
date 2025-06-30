@@ -16,6 +16,7 @@
 #include "Components/Combat/Guard/ComponentGuard.h"
 #include "Abilities/Combat/HandleGetHit/AbilityHandleGetHit.h"
 #include "Attribute/Health/AttributeHealth.h"
+#include "Abilities/Combat/HandleGetHit/AbilityDisablePlayer.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -66,7 +67,6 @@ AGASP6Character::AGASP6Character()
 	this->myGuardComponent = this->CreateDefaultSubobject<UComponentGuard>(TEXT("MyGuardComponent"));
 	// This ability is triggered exclusively via event so shouldn't be contained in any component
 	// TODO: Maybe cache this ability
-	this->AbilitySystemComponent->K2_GiveAbility(UAbilityHandleGetHit::StaticClass());
 	this->Health = this->CreateDefaultSubobject<UAttributeHealth>(TEXT("MyHealthAttribute"));
 	this->AbilitySystemComponent->AddAttributeSetSubobject<UAttributeHealth>(this->Health);
 	this->Health->OnHealthChangeEvent.AddDynamic(this, &AGASP6Character::CheckNegativeHealth);
@@ -75,6 +75,9 @@ AGASP6Character::AGASP6Character()
 void AGASP6Character::BeginPlay()
 {
 	Super::BeginPlay();
+	this->AbilitySystemComponent->K2_GiveAbility(UAbilityHandleGetHit::StaticClass());
+	FGameplayAbilitySpecHandle abilityHandle = this->AbilitySystemComponent->K2_GiveAbility(UAbilityDisablePlayer::StaticClass());
+
 }
 
 //////////////////////////////////////////////////////////////////////////
