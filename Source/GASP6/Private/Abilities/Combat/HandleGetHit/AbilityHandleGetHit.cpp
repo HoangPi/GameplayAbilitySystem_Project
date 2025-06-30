@@ -14,7 +14,7 @@
 
 UAbilityHandleGetHit::UAbilityHandleGetHit()
 {
-    this->InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
+    this->InstancingPolicy = EGameplayAbilityInstancingPolicy::NonInstanced;
     FAbilityTriggerData triggerEvent;
     triggerEvent.TriggerSource = EGameplayAbilityTriggerSource::GameplayEvent;
     triggerEvent.TriggerTag = MyTags::Ability::attacked;
@@ -84,7 +84,6 @@ void UAbilityHandleGetHit::ActivateAbility(
             ActivationInfo,
             (UEffectPlayerDown *)UEffectPlayerDown::StaticClass()->GetDefaultObject(),
             1.0f);
-        this->NotifyPlayerDown.Execute();
     }
     Super::EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
 }

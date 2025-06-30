@@ -10,7 +10,6 @@
  *
  */
 
-DECLARE_DELEGATE(FNotifyPlayerDown);
 
 UCLASS()
 class UAbilityHandleGetHit : public UGameplayAbility
@@ -38,5 +37,4 @@ private:
 		float Magnitude,
 		float Level = (1.0F));
 
-	FGameplayTagContainer GuardContainer;
 };
