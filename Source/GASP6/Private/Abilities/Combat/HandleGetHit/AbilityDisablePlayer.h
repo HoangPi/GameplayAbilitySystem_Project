@@ -13,8 +13,7 @@
  * 
  */
 
-DECLARE_DELEGATE(FOnNotifyPlayerDown);
-DECLARE_DELEGATE(FOnNotifyPlayerRecover);
+DECLARE_DELEGATE_OneParam(FOnNotifyPlayerDown, bool);
 
 UCLASS()
 class UAbilityDisablePlayer : public UGameplayAbility
@@ -25,7 +24,6 @@ public:
 	UAbilityDisablePlayer();
 
 	FOnNotifyPlayerDown NotifyPlayerDown;
-	FOnNotifyPlayerRecover NotifyPlayerRecover;
 
 	void ActivateAbility(
 		FGameplayAbilitySpecHandle Handle, 

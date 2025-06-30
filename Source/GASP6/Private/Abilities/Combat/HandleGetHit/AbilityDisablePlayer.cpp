@@ -29,11 +29,11 @@ void UAbilityDisablePlayer::ActivateAbility(
             1.0f));
     task->OnRemoved.AddDynamic(this, &UAbilityDisablePlayer::NotifyPlayerRecoverHandler);
     task->ReadyForActivation();
-    this->NotifyPlayerDown.Execute();
+    this->NotifyPlayerDown.ExecuteIfBound(true);
 }
 
 void UAbilityDisablePlayer::NotifyPlayerRecoverHandler(const FGameplayEffectRemovalInfo & unused)
 {
-    this->NotifyPlayerRecover.Execute();
+    this->NotifyPlayerDown.ExecuteIfBound(false);
     Super::EndAbility(this->GetCurrentAbilitySpecHandle(), this->GetCurrentActorInfo(), this->GetCurrentActivationInfo(), false, false);
 }

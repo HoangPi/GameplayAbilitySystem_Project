@@ -77,16 +77,12 @@ void AGASP6Character::BeginPlay()
 	Super::BeginPlay();
 	this->AbilitySystemComponent->K2_GiveAbility(UAbilityHandleGetHit::StaticClass());
 	FGameplayAbilitySpecHandle abilityHandle = this->AbilitySystemComponent->K2_GiveAbility(UAbilityDisablePlayer::StaticClass());
-	((UAbilityDisablePlayer *)this->AbilitySystemComponent
-		 ->FindAbilitySpecFromHandle(abilityHandle)
-		 ->Ability.Get())
-		->NotifyPlayerDown.BindLambda([this]()
-									  { this->IsPlayerDown = true; });
-	((UAbilityDisablePlayer *)this->AbilitySystemComponent
-		 ->FindAbilitySpecFromHandle(abilityHandle)
-		 ->Ability.Get())
-		->NotifyPlayerRecover.BindLambda([this]()
-										 { this->IsPlayerDown = false; });
+	FGameplayAbilitySpec *spec = this->AbilitySystemComponent->FindAbilitySpecFromHandle(abilityHandle);
+	UAbilityDisablePlayer *abi = Cast<UAbilityDisablePlayer>(spec->GetPrimaryInstance());
+	if(abi)
+	{
+		abi->NotifyPlayerDown.BindLambda([this](bool down){this->IsPlayerDown = down; });
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
