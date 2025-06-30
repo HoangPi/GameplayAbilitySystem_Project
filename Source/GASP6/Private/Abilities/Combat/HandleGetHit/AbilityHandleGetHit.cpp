@@ -11,96 +11,81 @@
 #include "Attribute/Stamina/AttributeStamina.h"
 #include "AbilityHandleGetHit.h"
 #include "Effects/PlayerStates/EffectPlayerDown.h"
+#include "Abilities/Combat/HandleGetHit/AbilityDisablePlayer.h"
 
 UAbilityHandleGetHit::UAbilityHandleGetHit()
 {
+    this->InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
     FAbilityTriggerData triggerEvent;
     triggerEvent.TriggerSource = EGameplayAbilityTriggerSource::GameplayEvent;
     triggerEvent.TriggerTag = MyTags::Ability::attacked;
     this->AbilityTriggers.Add(triggerEvent);
+
+    this->GuardContainer.AddTag(MyTags::PlayerState::guard);
+    this->GuardContainer.AddTag(MyTags::PlayerState::manual_guard);
+
+    this->ActivationOwnedTags.AddTag(MyTags::PlayerState::combat);
 }
 
-// TODO: promote those logics into a function
 void UAbilityHandleGetHit::ActivateAbility(
     FGameplayAbilitySpecHandle Handle,
     const FGameplayAbilityActorInfo *ActorInfo,
     FGameplayAbilityActivationInfo ActivationInfo,
     const FGameplayEventData *TriggerEventData)
 {
+    // If not triggered via event, incorrect
     if (!TriggerEventData)
     {
         return;
     }
-    UAbilitySystemComponent *asc = this->GetAbilitySystemComponentFromActorInfo();
     if (!this->MyAbilityGuard)
     {
         this->FindMyAbilityGuard();
     }
+    UAbilitySystemComponent *asc = this->GetAbilitySystemComponentFromActorInfo();
+    FGameplayEffectSpecHandle effectSpecHandle;
+    bool perfectGuard = false;
+    // If has PERFECT GUARD tag, only reduce stamina by half of the magnitude
+    // Also remove 1 stack of PERFECT GUARD
     if (asc->GetGameplayEffectCount(UEffectPerfectGuard::StaticClass(), nullptr) > 0)
     {
-        // Remove a perfect guard stack
         asc->RemoveActiveGameplayEffect(this->MyAbilityGuard->PerfectGuardEffectHandle, 1);
-        // Reduce stamina
-        FGameplayEffectSpecHandle effectSpecHandle = this->MakeOutgoingGameplayEffectSpec(
+        effectSpecHandle = this->CreateEffectSpecHandle(
             UEffectStaminaInstant::StaticClass(),
-            this->GetAbilityLevel());
-        effectSpecHandle.Data.Get()->SetSetByCallerMagnitude(MyTags::Effect::stamina, -TriggerEventData->EventMagnitude / 2);
-        this->ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, effectSpecHandle);
-        return;
+            MyTags::Effect::stamina,
+            -TriggerEventData->EventMagnitude / 2);
+        perfectGuard = true;
     }
-    if (asc->HasMatchingGameplayTag(MyTags::PlayerState::guard))
+    // If has GUARD or MANUAL GUARD tag, reduce stamina by the magnitude
+    // Also remove all GUARD stack
+    else if (asc->HasAnyMatchingGameplayTags(this->GuardContainer))
     {
         asc->RemoveActiveGameplayEffect(this->MyAbilityGuard->GuardEffectHandle, -1);
-        FGameplayEffectSpecHandle effectSpecHandle = this->MakeOutgoingGameplayEffectSpec(
+        effectSpecHandle = this->CreateEffectSpecHandle(
             UEffectStaminaInstant::StaticClass(),
-            this->GetAbilityLevel());
-        effectSpecHandle.Data.Get()->SetSetByCallerMagnitude(MyTags::Effect::stamina, -TriggerEventData->EventMagnitude);
-        this->ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, effectSpecHandle);
-        // TODO: Maybe move this logic else where
-        if (
-            ((UAttributeStamina *)this->GetAbilitySystemComponentFromActorInfo()->GetAttributeSet(UAttributeStamina::StaticClass()))->Stamina.GetCurrentValue() < TriggerEventData->EventMagnitude)
-        {
-            this->ApplyGameplayEffectToOwner(
-                Handle,
-                ActorInfo,
-                ActivationInfo,
-                (UEffectPlayerDown *)UEffectPlayerDown::StaticClass()->GetDefaultObject(),
-                this->GetAbilityLevel());
-        }
-        return;
+            MyTags::Effect::stamina,
+            -TriggerEventData->EventMagnitude);
     }
-    if (asc->HasMatchingGameplayTag(MyTags::PlayerState::manual_guard))
+    // If not GUARD at all, reduce health
+    else
     {
-        GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, FString("Manually blocked"));
-        FGameplayEffectSpecHandle effectSpecHandle = this->MakeOutgoingGameplayEffectSpec(
-            UEffectStaminaInstant::StaticClass(),
-            this->GetAbilityLevel());
-        effectSpecHandle.Data.Get()->SetSetByCallerMagnitude(MyTags::Effect::stamina, -TriggerEventData->EventMagnitude);
-        this->ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, effectSpecHandle);
-        // TODO: Maybe move this logic else where
-        if (
-            ((UAttributeStamina *)this->GetAbilitySystemComponentFromActorInfo()->GetAttributeSet(UAttributeStamina::StaticClass()))->Stamina.GetCurrentValue() < TriggerEventData->EventMagnitude)
-        {
-            this->ApplyGameplayEffectToOwner(
-                Handle,
-                ActorInfo,
-                ActivationInfo,
-                (UEffectPlayerDown *)UEffectPlayerDown::StaticClass()->GetDefaultObject(),
-                this->GetAbilityLevel());
-            FGameplayTagContainer container;
-            container.AddTag(MyTags::Ability::Requirement::stamina);
-            this->GetAbilitySystemComponentFromActorInfo()->CancelAbilities(&container);
-        }
-        // TODO: Consider change this implementation
-        this->GetAbilitySystemComponentFromActorInfo()->AddLooseGameplayTag(MyTags::PlayerState::combat);
-        this->GetAbilitySystemComponentFromActorInfo()->RemoveLooseGameplayTag(MyTags::PlayerState::combat);
-        return;
+        effectSpecHandle = this->CreateEffectSpecHandle(
+            UEffectHealthModifier::StaticClass(),
+            MyTags::Effect::health,
+            -TriggerEventData->EventMagnitude);
     }
-    FGameplayEffectSpecHandle effectSpecHandle = this->MakeOutgoingGameplayEffectSpec(
-        UEffectHealthModifier::StaticClass(),
-        this->GetAbilityLevel());
-    effectSpecHandle.Data.Get()->SetSetByCallerMagnitude(MyTags::Effect::health, -TriggerEventData->EventMagnitude);
+    // Either way, apply the effect to owner
     this->ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, effectSpecHandle);
+    // If stamina reach 0 but player perfectly guarded, player still stands
+    if (!perfectGuard && asc->HasMatchingGameplayTag(MyTags::Attribute::Stamina::empty))
+    {
+        if(!this->MyAbilityDownPlayer.IsValid())
+        {
+            this->MyAbilityDownPlayer = asc->FindAbilitySpecFromClass(UAbilityDisablePlayer::StaticClass())->Handle;
+        }
+        asc->TryActivateAbility(this->MyAbilityDownPlayer);
+    }
+    Super::EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
 }
 
 void UAbilityHandleGetHit::FindMyAbilityGuard()
@@ -109,4 +94,15 @@ void UAbilityHandleGetHit::FindMyAbilityGuard()
     UAbilitySystemComponent *asc = this->GetAbilitySystemComponentFromActorInfo();
     FGameplayAbilitySpec *GuardSpec = asc->FindAbilitySpecFromClass(UAbilityGuard::StaticClass());
     this->MyAbilityGuard = (UAbilityGuard *)GuardSpec->GetPrimaryInstance();
+}
+
+FGameplayEffectSpecHandle UAbilityHandleGetHit::CreateEffectSpecHandle(
+    TSubclassOf<UGameplayEffect> GameplayEffectClass,
+    FGameplayTag DataTag,
+    float Magnitude,
+    float Level)
+{
+    FGameplayEffectSpecHandle effectSpecHandle = this->MakeOutgoingGameplayEffectSpec(GameplayEffectClass, Level);
+    effectSpecHandle.Data.Get()->SetSetByCallerMagnitude(DataTag, Magnitude);
+    return effectSpecHandle;
 }

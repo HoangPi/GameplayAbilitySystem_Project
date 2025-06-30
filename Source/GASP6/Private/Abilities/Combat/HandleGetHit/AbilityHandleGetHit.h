@@ -9,6 +9,7 @@
 /**
  *
  */
+
 UCLASS()
 class UAbilityHandleGetHit : public UGameplayAbility
 {
@@ -25,5 +26,14 @@ public:
 
 private:
 	class UAbilityGuard *MyAbilityGuard = nullptr;
-	void FindMyAbilityGuard();
+	inline void FindMyAbilityGuard();
+	FGameplayAbilitySpecHandle MyAbilityDownPlayer;
+
+	inline FGameplayEffectSpecHandle CreateEffectSpecHandle(
+		TSubclassOf<UGameplayEffect> GameplayEffectClass,
+		FGameplayTag DataTag,
+		float Magnitude,
+		float Level = (1.0F));
+
+	FGameplayTagContainer GuardContainer;
 };

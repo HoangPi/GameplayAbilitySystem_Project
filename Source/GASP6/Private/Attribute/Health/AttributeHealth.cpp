@@ -16,7 +16,7 @@ UAttributeHealth::UAttributeHealth()
     }
 }
 
-void UAttributeHealth::PreAttributeChange(const FGameplayAttribute &Attribute, float &NewValue) const
+void UAttributeHealth::PreAttributeChange(const FGameplayAttribute &Attribute, float &NewValue)
 {
     float max;
     if(UAttributeHealth::GetHealthAttribute() == Attribute)

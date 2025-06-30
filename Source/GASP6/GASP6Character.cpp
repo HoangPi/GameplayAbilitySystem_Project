@@ -16,6 +16,7 @@
 #include "Components/Combat/Guard/ComponentGuard.h"
 #include "Abilities/Combat/HandleGetHit/AbilityHandleGetHit.h"
 #include "Attribute/Health/AttributeHealth.h"
+#include "Abilities/Combat/HandleGetHit/AbilityDisablePlayer.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -66,11 +67,22 @@ AGASP6Character::AGASP6Character()
 	this->myGuardComponent = this->CreateDefaultSubobject<UComponentGuard>(TEXT("MyGuardComponent"));
 	// This ability is triggered exclusively via event so shouldn't be contained in any component
 	// TODO: Maybe cache this ability
-	this->AbilitySystemComponent->K2_GiveAbility(UAbilityHandleGetHit::StaticClass());
-
 	this->Health = this->CreateDefaultSubobject<UAttributeHealth>(TEXT("MyHealthAttribute"));
 	this->AbilitySystemComponent->AddAttributeSetSubobject<UAttributeHealth>(this->Health);
 	this->Health->OnHealthChangeEvent.AddDynamic(this, &AGASP6Character::CheckNegativeHealth);
+}
+
+void AGASP6Character::BeginPlay()
+{
+	Super::BeginPlay();
+	this->AbilitySystemComponent->K2_GiveAbility(UAbilityHandleGetHit::StaticClass());
+	FGameplayAbilitySpecHandle abilityHandle = this->AbilitySystemComponent->K2_GiveAbility(UAbilityDisablePlayer::StaticClass());
+	FGameplayAbilitySpec *spec = this->AbilitySystemComponent->FindAbilitySpecFromHandle(abilityHandle);
+	UAbilityDisablePlayer *abi = Cast<UAbilityDisablePlayer>(spec->GetPrimaryInstance());
+	abi->NotifyPlayerDown.BindLambda([this](bool down){this->IsPlayerDown = down; });
+	// if(abi)
+	// {
+	// }
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -97,7 +109,7 @@ void AGASP6Character::SetupPlayerInputComponent(UInputComponent *PlayerInputComp
 	{
 
 		// Jumping
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &AGASP6Character::Jump);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 
 		// Moving
@@ -115,6 +127,10 @@ void AGASP6Character::SetupPlayerInputComponent(UInputComponent *PlayerInputComp
 void AGASP6Character::Move(const FInputActionValue &Value)
 {
 	// input is a Vector2D
+	if (this->IsPlayerDown)
+	{
+		return;
+	}
 	FVector2D MovementVector = Value.Get<FVector2D>();
 
 	if (Controller != nullptr)
@@ -159,8 +175,16 @@ UAbilitySystemComponent *AGASP6Character::GetAbilitySystemComponent() const
 
 void AGASP6Character::CheckNegativeHealth(float percentage)
 {
-	if(percentage <= 0.0f)
+	if (percentage <= 0.0f)
 	{
 		this->Destroy();
+	}
+}
+
+void AGASP6Character::Jump()
+{
+	if (!this->IsPlayerDown)
+	{
+		Super::Jump();
 	}
 }
