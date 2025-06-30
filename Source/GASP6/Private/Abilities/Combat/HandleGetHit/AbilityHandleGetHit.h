@@ -36,4 +36,5 @@ private:
 		float Magnitude,
 		float Level = (1.0F));
 
+	FGameplayTagContainer GuardContainer;
 };

@@ -14,7 +14,7 @@
 
 UAbilityHandleGetHit::UAbilityHandleGetHit()
 {
-    this->InstancingPolicy = EGameplayAbilityInstancingPolicy::NonInstanced;
+    this->InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
     FAbilityTriggerData triggerEvent;
     triggerEvent.TriggerSource = EGameplayAbilityTriggerSource::GameplayEvent;
     triggerEvent.TriggerTag = MyTags::Ability::attacked;
