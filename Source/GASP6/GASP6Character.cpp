@@ -79,10 +79,10 @@ void AGASP6Character::BeginPlay()
 	FGameplayAbilitySpecHandle abilityHandle = this->AbilitySystemComponent->K2_GiveAbility(UAbilityDisablePlayer::StaticClass());
 	FGameplayAbilitySpec *spec = this->AbilitySystemComponent->FindAbilitySpecFromHandle(abilityHandle);
 	UAbilityDisablePlayer *abi = Cast<UAbilityDisablePlayer>(spec->GetPrimaryInstance());
-	if(abi)
-	{
-		abi->NotifyPlayerDown.BindLambda([this](bool down){this->IsPlayerDown = down; });
-	}
+	abi->NotifyPlayerDown.BindLambda([this](bool down){this->IsPlayerDown = down; });
+	// if(abi)
+	// {
+	// }
 }
 
 //////////////////////////////////////////////////////////////////////////
