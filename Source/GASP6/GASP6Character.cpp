@@ -66,7 +66,7 @@ AGASP6Character::AGASP6Character()
 	this->myGuardComponent = this->CreateDefaultSubobject<UComponentGuard>(TEXT("MyGuardComponent"));
 	// This ability is triggered exclusively via event so shouldn't be contained in any component
 	// TODO: Maybe cache this ability
-
+	this->AbilitySystemComponent->K2_GiveAbility(UAbilityHandleGetHit::StaticClass());
 	this->Health = this->CreateDefaultSubobject<UAttributeHealth>(TEXT("MyHealthAttribute"));
 	this->AbilitySystemComponent->AddAttributeSetSubobject<UAttributeHealth>(this->Health);
 	this->Health->OnHealthChangeEvent.AddDynamic(this, &AGASP6Character::CheckNegativeHealth);
@@ -75,9 +75,6 @@ AGASP6Character::AGASP6Character()
 void AGASP6Character::BeginPlay()
 {
 	Super::BeginPlay();
-	FGameplayAbilitySpecHandle getHitHandle = this->AbilitySystemComponent->K2_GiveAbility(UAbilityHandleGetHit::StaticClass());
-	((UAbilityHandleGetHit *)this->AbilitySystemComponent->FindAbilitySpecFromHandle(getHitHandle)->GetPrimaryInstance())->NotifyPlayerDown.BindLambda([this]()
-																																					   { this->IsPlayerDown = true; });
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -122,7 +119,7 @@ void AGASP6Character::SetupPlayerInputComponent(UInputComponent *PlayerInputComp
 void AGASP6Character::Move(const FInputActionValue &Value)
 {
 	// input is a Vector2D
-	if(this->IsPlayerDown)
+	if (this->IsPlayerDown)
 	{
 		return;
 	}
@@ -178,7 +175,7 @@ void AGASP6Character::CheckNegativeHealth(float percentage)
 
 void AGASP6Character::Jump()
 {
-	if(!this->IsPlayerDown)
+	if (!this->IsPlayerDown)
 	{
 		Super::Jump();
 	}

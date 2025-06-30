@@ -25,7 +25,6 @@ public:
 		FGameplayAbilityActivationInfo ActivationInfo,
 		const FGameplayEventData *TriggerEventData);
 	
-	FNotifyPlayerDown NotifyPlayerDown;
 
 private:
 	class UAbilityGuard *MyAbilityGuard = nullptr;
