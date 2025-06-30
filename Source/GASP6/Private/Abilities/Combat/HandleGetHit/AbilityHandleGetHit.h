@@ -10,7 +10,6 @@
  *
  */
 
-
 UCLASS()
 class UAbilityHandleGetHit : public UGameplayAbility
 {
@@ -24,11 +23,11 @@ public:
 		const FGameplayAbilityActorInfo *ActorInfo,
 		FGameplayAbilityActivationInfo ActivationInfo,
 		const FGameplayEventData *TriggerEventData);
-	
 
 private:
 	class UAbilityGuard *MyAbilityGuard = nullptr;
-	void FindMyAbilityGuard();
+	inline void FindMyAbilityGuard();
+	FGameplayAbilitySpecHandle MyAbilityDownPlayer;
 
 	inline FGameplayEffectSpecHandle CreateEffectSpecHandle(
 		TSubclassOf<UGameplayEffect> GameplayEffectClass,

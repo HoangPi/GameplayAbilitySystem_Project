@@ -11,6 +11,7 @@
 #include "Attribute/Stamina/AttributeStamina.h"
 #include "AbilityHandleGetHit.h"
 #include "Effects/PlayerStates/EffectPlayerDown.h"
+#include "Abilities/Combat/HandleGetHit/AbilityDisablePlayer.h"
 
 UAbilityHandleGetHit::UAbilityHandleGetHit()
 {
@@ -78,12 +79,11 @@ void UAbilityHandleGetHit::ActivateAbility(
     // If stamina reach 0 but player perfectly guarded, player still stands
     if (!perfectGuard && asc->HasMatchingGameplayTag(MyTags::Attribute::Stamina::empty))
     {
-        this->ApplyGameplayEffectToOwner(
-            Handle,
-            ActorInfo,
-            ActivationInfo,
-            (UEffectPlayerDown *)UEffectPlayerDown::StaticClass()->GetDefaultObject(),
-            1.0f);
+        if(!this->MyAbilityDownPlayer.IsValid())
+        {
+            this->MyAbilityDownPlayer = asc->FindAbilitySpecFromClass(UAbilityDisablePlayer::StaticClass())->Handle;
+        }
+        asc->TryActivateAbility(this->MyAbilityDownPlayer);
     }
     Super::EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
 }
