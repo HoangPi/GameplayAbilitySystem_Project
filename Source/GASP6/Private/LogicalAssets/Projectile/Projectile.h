@@ -13,6 +13,8 @@
 
 #include "Projectile.generated.h"
 
+DECLARE_DYNAMIC_DELEGATE_OneParam(FOnImpact, bool, IsTerrain);
+
 UCLASS(Blueprintable)
 class AProjectile : public AActor
 {
@@ -48,6 +50,9 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
 	FGameplayEventData payload;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Events")
+	FOnImpact OnImpact;
 
 protected:
 	// Called when the game starts or when spawned

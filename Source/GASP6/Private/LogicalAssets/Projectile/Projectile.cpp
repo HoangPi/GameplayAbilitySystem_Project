@@ -84,6 +84,7 @@ void AProjectile::NotifyActorBeginOverlap(AActor *OtherActor)
 		{
 			asc->HandleGameplayEvent(MyTags::Ability::attacked, &this->payload);
 		}
+		this->OnImpact.ExecuteIfBound(true);
 	}
-	this->Destroy();
+	// this->Destroy();
 }
